@@ -7,7 +7,7 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine('sqlite:///hot_songs.db',echo=True)
+engine = create_engine('sqlite:///hot_songs.db',echo=False)
 Base = declarative_base()
 
 class Song(Base):
@@ -38,13 +38,16 @@ for hit_song in chart:
     rank_last = hit_song.lastPos, weeks = hit_song.weeks,
     movement = hit_song.change)
 
-    session.add(song) # Adds Song TODO: IF EXISTS ALREADY, THEN UPDATE IT
-    session.commit()
-    print 'Commited song %s' % song.title
+    # Check if song exists, if so then update date, else add to db
+    if session.query(Song).filter(Song.title==song.title and Song.artists==song.artists).count() > 0:
+        to_update_song = session.query(Song).filter(Song.title==song.title and Song.artists==song.artists).first()
+        to_update_song.weeks = song.weeks
+        to_update_song.rank_peak = song.rank_peak
+        to_update_song.rank_current = song.rank_current
+        to_update_song.rank_last = song.rank_last
+        print 'Updated ', to_update_song.title
+    else:
+        session.add(song)
+        print 'Added song ', song.title
 
-# --------- TODO: DELTE BELOW ---------
-
-for instance in session.query(Song).order_by(Song.weeks):
-    session.delete(instance)
-
-print session.query(Song).count()
+session.commit()
