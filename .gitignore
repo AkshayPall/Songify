@@ -1,4 +1,6 @@
 *.DS_Store
-*.pyc
 hello.py
+*.pyc
+*.db
+*.db-journal
 env/
