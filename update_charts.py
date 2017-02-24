@@ -39,8 +39,10 @@ for hit_song in chart:
     movement = hit_song.change)
 
     # Check if song exists, if so then update date, else add to db
-    if session.query(Song).filter(Song.title==song.title and Song.artists==song.artists).count() > 0:
-        to_update_song = session.query(Song).filter(Song.title==song.title and Song.artists==song.artists).first()
+    if session.query(Song).filter(
+    Song.title==song.title and Song.artists==song.artists).count() > 0:
+        to_update_song = session.query(Song).filter(
+        Song.title==song.title and Song.artists==song.artists).first()
         to_update_song.weeks = song.weeks
         to_update_song.rank_peak = song.rank_peak
         to_update_song.rank_current = song.rank_current
