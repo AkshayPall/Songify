@@ -1,5 +1,4 @@
 *.DS_Store
-hello.py
 *.pyc
 *.db
 *.db-journal
