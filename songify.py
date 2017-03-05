@@ -5,22 +5,33 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 app = Flask(__name__)
+SongData = Song.SongData
 
+# Values for rerference
+DATA_NOT_FOUND_MESSAGE = 'Sorry! We couldn\'t find data on this track!'
+SONG_TITLE_ARG = 'song_title'
+SONG_ARTISTS_ARG = 'artists'
+DATABASE_ARG='sqlite:///hot_songs.db'
+
+
+# Data request function
 @app.route('/', methods=['GET'])
 def get_songs():
-    engine = create_engine('sqlite:///hot_songs.db',echo=False)
+    engine = create_engine(DATABASE_ARG,echo=False)
     Base = declarative_base()
     Base.metadata.create_all(engine)
     session = sessionmaker(bind=engine)()
 
     #chart = billboard.ChartData('hot-100')
-    giv_song = request.args.get('song_title')
-    giv_artist = request.args.get('artists')
+    giv_song = request.args.get(SONG_TITLE_ARG)
+    giv_artist = request.args.get(SONG_ARTISTS_ARG)
+    # TODO: remove parenthesis and other characters from arguments
+    # that may prevent it from being matched in the database 
     print 'SEARCH: ',giv_song,'\t',giv_artist
     if len(giv_song) > 0 and len(giv_artist) > 0:
-        song = session.query(Song.SongData).filter(and_(
-        Song.SongData.title.ilike(giv_song),
-        Song.SongData.artists.ilike(giv_artist))).first()
-        if (song != None and song.title != None):
-            return song.title
-    return 'song not in the charts'
+        song = session.query(SongData).filter(and_(
+        SongData.title.ilike(giv_song),
+        SongData.artists.ilike(giv_artist))).first()
+        if song != None and song.title != None:
+            return song.parseData()
+    return DATA_NOT_FOUND_MESSAGE
