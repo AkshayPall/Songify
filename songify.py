@@ -26,7 +26,7 @@ def get_songs():
     giv_song = request.args.get(SONG_TITLE_ARG)
     giv_artist = request.args.get(SONG_ARTISTS_ARG)
     # TODO: remove parenthesis and other characters from arguments
-    # that may prevent it from being matched in the database 
+    # that may prevent it from being matched in the database
     print 'SEARCH: ',giv_song,'\t',giv_artist
     if len(giv_song) > 0 and len(giv_artist) > 0:
         song = session.query(SongData).filter(and_(
