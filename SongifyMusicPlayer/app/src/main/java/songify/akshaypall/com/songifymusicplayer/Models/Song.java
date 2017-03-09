@@ -13,4 +13,21 @@ public class Song {
     private String title;
     private String artists;
 
+    public Song(long id, String title, String artists){
+        this.id = id;
+        this.title = title;
+        this.artists = artists;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getArtists() {
+        return artists;
+    }
 }
