@@ -1,10 +1,14 @@
 package songify.akshaypall.com.songifymusicplayer;
 
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContentResolverCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -23,11 +27,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.jar.Manifest;
 
 import songify.akshaypall.com.songifymusicplayer.Models.Song;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int REQUEST_STORAGE_PERMISSION = 10;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -77,8 +83,22 @@ public class MainActivity extends AppCompatActivity {
 
         //Fill up the song arraylist with the data
         mAllSongs = new ArrayList<>();
+        int storagePermission = ContextCompat.checkSelfPermission(
+                this, android.Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (PackageManager.PERMISSION_GRANTED == storagePermission){
+            updateSongData();
+        } else {
+            //permission wasn't granted, request it
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_STORAGE_PERMISSION
+            );
+        }
 
-        //TODO: Need to request permissions here!
+    }
+
+    private void updateSongData(){
         Cursor cursor = getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 null, null, null, null
@@ -102,13 +122,28 @@ public class MainActivity extends AppCompatActivity {
             cursor.close();
         }
 
-        //TODO: Log the song list, for debugging. Remove!
+        //Log the song list, for debugging.
         for (Song song : mAllSongs){
             Log.wtf(song.getTitle(), song.getArtists()+" "+song.getId());
         }
-
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode){
+            case REQUEST_STORAGE_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    updateSongData();
+                    break;
+                } else {
+                    Log.wtf("STORAGE PERMISSION", "denied");
+                }
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
