@@ -1,5 +1,11 @@
 <resources>
+    <!-- Basic App View Constants -->
     <string name="app_name">Songify Music Player</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- Default Values for displaying song view items -->
+    <string name="song_title_default">Unknown Track</string>
+    <string name="song_artists_default">Unknown Artist</string>
+    <string name="no_songs_detected_snackbar_message">No songs detected!</string>
 </resources>

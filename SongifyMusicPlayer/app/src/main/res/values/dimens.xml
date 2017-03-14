@@ -4,4 +4,13 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+
+    <!-- Dimens for the mini player bar when looking at the song list fragment -->
+    <dimen name="player_mini_state_fab_margin">32dp</dimen>
+    <dimen name="player_mini_bar_height">64dp</dimen>
+    <dimen name="player_mini_state_fab_size">62dp</dimen>
+    <dimen name="player_mini_artists_textsize">12sp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+    <dimen name="song_album_image_size">36dp</dimen>
+
 </resources>

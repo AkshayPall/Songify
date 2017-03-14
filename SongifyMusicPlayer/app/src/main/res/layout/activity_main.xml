@@ -15,6 +15,12 @@
         android:paddingTop="@dimen/appbar_padding_top"
         android:theme="@style/AppTheme.AppBarOverlay">
 
+        <android.support.v4.view.ViewPager
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -27,18 +33,51 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/container"
+    <!-- The MINI PLAYER group (excluding play/pause fab)-->
+    <!-- TODO: write relation between this group within the
+         TODO: coordinator layout to disappear on scroll to
+         TODO: second fragment/page-->
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimaryDark"
+        android:layout_height="@dimen/player_mini_bar_height">
+        <!-- song title, artist, then play/pause and album icon -->
+            <ImageView
+                android:layout_width="@dimen/song_album_image_size"
+                android:layout_height="@dimen/song_album_image_size"
+                android:src="@color/colorAccent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:padding="16dp"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:text="@string/song_title_default"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/player_mini_artists_textsize"
+                    android:layout_height="wrap_content"
+                    android:text="@string/song_artists_default"/>
+            </LinearLayout>
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/player_mini_state_fab"
+        android:layout_width="@dimen/player_mini_state_fab_size"
+        android:layout_height="@dimen/player_mini_state_fab_size"
         android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        android:layout_marginBottom="@dimen/player_mini_state_fab_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_media_play" />
 
 </android.support.design.widget.CoordinatorLayout>
