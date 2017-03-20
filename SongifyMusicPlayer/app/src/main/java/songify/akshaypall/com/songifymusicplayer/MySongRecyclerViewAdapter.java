@@ -12,16 +12,18 @@ import songify.akshaypall.com.songifymusicplayer.Models.Song;
 import java.util.ArrayList;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link songify.akshaypall.com.songifymusicplayer.Models.Song} and makes a call to the
- * specified {@link songify.akshaypall.com.songifymusicplayer.SongListFragment.OnSongListFragmentListener}.
+ * {@link RecyclerView.Adapter} that can display a
+ * {@link songify.akshaypall.com.songifymusicplayer.Models.Song} and makes a call to the specified
+ * {@link songify.akshaypall.com.songifymusicplayer.SongListFragment.OnSongListFragmentListener}.
  */
-public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecyclerViewAdapter.ViewHolder> {
+class MySongRecyclerViewAdapter extends
+        RecyclerView.Adapter<MySongRecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<Song> mSongs;
     private final SongListFragment.OnSongListFragmentListener mListener;
     private Context mContext;
 
-    public MySongRecyclerViewAdapter(ArrayList<Song> songs,
+    MySongRecyclerViewAdapter(ArrayList<Song> songs,
                                      SongListFragment.OnSongListFragmentListener listener,
                                      Context context) {
         mSongs = songs;
@@ -46,7 +48,7 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
 
         Log.wtf("Current Song", "--View-- "+song.getTitle()+holder.mTitle.getText());
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
@@ -62,15 +64,13 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
         return mSongs.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private final View mView;
+    class ViewHolder extends RecyclerView.ViewHolder {
         private final ImageView mAlbumImage;
         private final TextView mArtists;
         private final TextView mTitle;
 
         private ViewHolder(View view) {
             super(view);
-            mView = view;
             mAlbumImage = (ImageView) view.findViewById(R.id.song_album_image);
             mArtists = (TextView) view.findViewById(R.id.song_artists);
             mTitle = (TextView) view.findViewById(R.id.song_title);

@@ -10,20 +10,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import songify.akshaypall.com.songifymusicplayer.Models.Song;
-import songify.akshaypall.com.songifymusicplayer.dummy.DummyContent;
-import songify.akshaypall.com.songifymusicplayer.dummy.DummyContent.DummyItem;
-
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -48,11 +42,11 @@ public class SongListFragment extends Fragment {
 
     @SuppressWarnings("unused")
     public static SongListFragment newInstance() {
-        SongListFragment fragment = new SongListFragment();
+//        SongListFragment fragment = new SongListFragment();
 //        Bundle args = new Bundle();
 //        args.putParcelableArrayList(ARG_SONGS, songs);
 //        fragment.setArguments(args);
-        return fragment;
+        return new SongListFragment();
     }
 
     @Override
@@ -74,11 +68,11 @@ public class SongListFragment extends Fragment {
 
         // Set the adapter
         RecyclerView mRecyclerView = (RecyclerView) view;
-        mAdapter = new MySongRecyclerViewAdapter(mSongs, mListener, getActivity());
-        mRecyclerView.setAdapter(mAdapter);
-        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+        mAdapter = new MySongRecyclerViewAdapter(mSongs, mListener, getContext());
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mAdapter);
 
         int storagePermission = ContextCompat.checkSelfPermission(
                 getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -172,7 +166,7 @@ public class SongListFragment extends Fragment {
      * This interface is implemented by MainActivity to update the current song
      * field in itself and also in the MediaPlayerFragment when a song is pressed.
      */
-    public interface OnSongListFragmentListener {
+    interface OnSongListFragmentListener {
         void onPressedSong(Song song);
     }
 }

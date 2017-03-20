@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
     @Override
     public void onPressedSong(Song song) {
         mCurrentSong = song;
+        //TODO: UPDATE the bottom bar!
     }
 
     /**
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
+            // Show 2 total pages.
             return 2;
         }
 
