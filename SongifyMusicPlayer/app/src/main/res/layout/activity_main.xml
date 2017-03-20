@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/colorSongBackground"
     tools:context="songify.akshaypall.com.songifymusicplayer.MainActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -37,6 +38,7 @@
          TODO: coordinator layout to disappear on scroll to
          TODO: second fragment/page-->
     <LinearLayout
+        android:id="@+id/player_mini_package"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_gravity="bottom"
@@ -44,6 +46,7 @@
         android:layout_height="@dimen/player_mini_bar_height">
         <!-- song title, artist, then play/pause and album icon -->
             <ImageView
+                android:id="@+id/player_mini_current_song_album"
                 android:layout_width="@dimen/song_album_image_size"
                 android:layout_height="@dimen/song_album_image_size"
                 android:src="@color/colorAccent"
@@ -56,15 +59,23 @@
                 android:padding="16dp"
                 android:layout_height="match_parent">
                 <TextView
+                    android:id="@+id/player_mini_current_song_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
                     android:textStyle="bold"
+                    android:layout_marginEnd="@dimen/player_mini_state_fab_size"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="@string/song_title_default"/>
                 <TextView
+                    android:id="@+id/player_mini_current_song_artist"
                     android:layout_width="match_parent"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/player_mini_artists_textsize"
+                    android:layout_marginEnd="@dimen/player_mini_state_fab_size"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:layout_height="wrap_content"
                     android:text="@string/song_artists_default"/>
             </LinearLayout>

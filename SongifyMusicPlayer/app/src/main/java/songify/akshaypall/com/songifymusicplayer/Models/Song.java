@@ -1,5 +1,6 @@
 package songify.akshaypall.com.songifymusicplayer.Models;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -43,8 +44,6 @@ public class Song implements Parcelable {
     public long getId() {
         return id;
     }
-
-    //TODO: Make get title and get artists shorten the return values if it is too long
 
     public String getTitle() {
         return title;

@@ -1,5 +1,6 @@
 package songify.akshaypall.com.songifymusicplayer;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.provider.MediaStore;
@@ -24,16 +25,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.jar.Manifest;
 
 import songify.akshaypall.com.songifymusicplayer.Models.Song;
+import songify.akshaypall.com.songifymusicplayer.ViewPageTransformers.SlideInTransformer;
 
 public class MainActivity extends AppCompatActivity implements SongListFragment.OnSongListFragmentListener{
 
     private static Song mCurrentSong;
+    private ImageView mCurrentSongAlbumImage;
+    private TextView mCurrentSongTitle;
+    private TextView mCurrentSongArtists;
+    private FloatingActionButton mMiniPlayerFab;
 
     /**
      * This is a static list of all the songs (as {@link Song} objects) on the device. It is to be
@@ -46,15 +54,46 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Set up current song views
+        mCurrentSongAlbumImage = (ImageView)findViewById(R.id.player_mini_current_song_album);
+        mCurrentSongTitle = (TextView) findViewById(R.id.player_mini_current_song_title);
+        mCurrentSongArtists = (TextView) findViewById(R.id.player_mini_current_song_artist);
+        mMiniPlayerFab = (FloatingActionButton)findViewById(R.id.player_mini_state_fab);
+        final LinearLayout playerStatePackage = (LinearLayout)findViewById(R.id.player_mini_package);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        HomePagerAdapter mHomePagerAdapter = new HomePagerAdapter(getSupportFragmentManager());
+        final HomePagerAdapter mHomePagerAdapter = new HomePagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the adapter.
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
+        final ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mHomePagerAdapter);
+        mViewPager.setPageTransformer(false, new SlideInTransformer());
+        final Context context = this;
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                toolbar.setTitle(mHomePagerAdapter.getPageTitle(position));
+                float yDelta = context.getResources().getDisplayMetrics().heightPixels
+                        - playerStatePackage.getY();
+                if (position == 1){
+                    playerStatePackage.animate().translationY(yDelta);
+                } else {
+                    playerStatePackage.animate().translationY(-yDelta);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
 
     }
 
@@ -82,8 +121,19 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
 
     @Override
     public void onPressedSong(Song song) {
+        updateCurrentSong(song);
+    }
+
+    @Override
+    public void setupFirstTrack(Song song) {
+        updateCurrentSong(song);
+    }
+
+    private void updateCurrentSong(Song song) {
         mCurrentSong = song;
-        //TODO: UPDATE the bottom bar!
+        //TODO: update album image
+        mCurrentSongTitle.setText(song.getTitle());
+        mCurrentSongArtists.setText(song.getArtists());
     }
 
     /**
