@@ -81,12 +81,12 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
             @Override
             public void onPageSelected(int position) {
                 toolbar.setTitle(mHomePagerAdapter.getPageTitle(position));
-                float yDelta = context.getResources().getDisplayMetrics().heightPixels
-                        - playerStatePackage.getY();
+                float displayHeight = context.getResources().getDisplayMetrics().heightPixels;
+                float yDelta = displayHeight - playerStatePackage.getHeight();
                 if (position == 1){
-                    playerStatePackage.animate().translationY(yDelta);
+                    playerStatePackage.animate().y(displayHeight);
                 } else {
-                    playerStatePackage.animate().translationY(-yDelta);
+                    playerStatePackage.animate().y(yDelta);
                 }
             }
 
