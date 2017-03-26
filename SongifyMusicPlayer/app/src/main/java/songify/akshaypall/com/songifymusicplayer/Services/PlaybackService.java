@@ -10,8 +10,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -26,9 +24,11 @@ public class PlaybackService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener{
 
-
+    // Tags for Logging
     private static final String ERROR_TAG = "PlaybackService_Error";
     private static final String UPDATE_TAG = "PlayBackService_Update";
+
+    // Fields to store across lifecycle of service
     private ArrayList<Song> mSongs;
     private int mSongPos;
     private MediaPlayer mPlayer;
@@ -37,6 +37,8 @@ public class PlaybackService extends Service implements
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // Initialize fields
         mSongPos = 0;
         mPlayer = new MediaPlayer();
         mSongs = new ArrayList<>();
@@ -83,19 +85,27 @@ public class PlaybackService extends Service implements
 
     @Override
     public boolean onUnbind(Intent intent) {
+        // Stop operation and unbind player from service
         mPlayer.stop();
         mPlayer.release();
         return false;
     }
 
 
-    /** Methods for music playback and state control **/
+    /**
+     * Methods for music playback and state control
+     */
+
     public void playSong(){
+        // Reset the player in case it was already playing a song or paused in another song
         mPlayer.reset();
+
+        // Check to prevent the case of the playSong method being invoked too early in the lifecycle
+        // of the app, where the SongListFragment hasn't passed the list of songs to the service yet
         if (mSongPos < mSongs.size()){
             Song toPlay = mSongs.get(mSongPos);
             Uri songUri = ContentUris.withAppendedId(
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, toPlay.getId());
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, toPlay.getmId());
             try {
                 mPlayer.setDataSource(getApplicationContext(), songUri);
                 mPlayer.prepareAsync();
@@ -105,22 +115,41 @@ public class PlaybackService extends Service implements
                 Log.wtf(ERROR_TAG, "Could not play song. ");
             }
         } else {
-            Log.wtf(ERROR_TAG, "index out of bounds for song in song arraylist. Possible that " +
+            Log.wtf(ERROR_TAG, "index out of bounds for song in song ArrayList. Possible that " +
                                 "song list is empty");
         }
     }
 
+    public void changeStateSong(){
+        // Play/Pause a song, this is called in place of playSong when the current/already selected
+        // song is selected for playback
+        if(mPlayer.isPlaying()){
+            mPlayer.pause();
+        } else {
+            mPlayer.start();
+        }
+    }
+
+    // Take in an ArrayList of Songs to update the service with playback. This comes from the
+    // MainActivity, which gets it from the SongListFragment once it has finished retrieving tracks
+    // using the Content resolver
     public void updateSongList(ArrayList<Song> songs){
         Log.wtf(UPDATE_TAG, "updated songs list");
+        // do not do mSongs = songs as that would maintain a reference to it, which may be unsafe
+        // in case the fragment/activity from which is came from has restarted
         mSongs.clear();
         mSongs.addAll(songs);
     }
 
     public void setSong(Song song){
         int index = mSongs.indexOf(song);
+        // Prevents the case of a song being selected that is not in the mSongs ArrayList (which may
+        // occur if the updateSongList method is not invoked before setSong.
         if (index != -1){
             Log.wtf(ERROR_TAG, "song not in index!");
             mSongPos = index;
+        } else {
+            Log.d(ERROR_TAG, "Song not in songs arraylist");
         }
     }
 

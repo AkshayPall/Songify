@@ -29,6 +29,7 @@ public class SongListFragment extends Fragment {
 
 //    private static final String ARG_SONGS = "song_list";
     private static final int REQUEST_STORAGE_PERMISSION = 10;
+    private static final String TAG = "SongListFrag";
     ArrayList<Song> mSongs;
     private OnSongListFragmentListener mListener;
     private MySongRecyclerViewAdapter mAdapter;
@@ -66,7 +67,7 @@ public class SongListFragment extends Fragment {
         // Get song data
         mSongs = new ArrayList<>();
 
-        // Set the adapter
+        // Instantiate and attach the adapter to the song list RecyclerView
         RecyclerView mRecyclerView = (RecyclerView) view;
         mAdapter = new MySongRecyclerViewAdapter(mSongs, mListener, getContext());
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
@@ -74,6 +75,7 @@ public class SongListFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
 
+        // Check for permissions, if not given, request them!
         int storagePermission = ContextCompat.checkSelfPermission(
                 getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE);
         if (PackageManager.PERMISSION_GRANTED == storagePermission){
@@ -90,9 +92,14 @@ public class SongListFragment extends Fragment {
         return view;
     }
 
+
+    // Retrieve all song metadata and their respective album image paths to display in the list
+    // as well as to sent to the MainActivity which then forwards to the PlaybackService for
+    // playback.
     private void updateSongData(){
         boolean firstLoad = mSongs.size() == 0;
 
+        // cursor to load song metadata
         Cursor cursor = getActivity().getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 null, null, null, null
@@ -103,13 +110,30 @@ public class SongListFragment extends Fragment {
             int idColumn = cursor.getColumnIndex(MediaStore.Audio.Media._ID);
             int artistsColumn = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
 
+
+            // Need a different cursor to pull the album image
+            Cursor albumCursor = getActivity().getContentResolver().query(
+                    MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, null, null, null, null
+            );
+            if (albumCursor != null){
+                albumCursor.moveToFirst();
+            }
+            int albumArtColumn = albumCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART);
+
             do {
+                String path = null;
+                if (albumArtColumn != -1){
+                    path = cursor.getString(albumArtColumn);
+                    albumCursor.moveToNext();
+                }
                 mSongs.add(new Song(
                         cursor.getLong(idColumn),
                         cursor.getString(titleColumn),
-                        cursor.getString(artistsColumn)
+                        cursor.getString(artistsColumn),
+                        path
                 ));
             } while (cursor.moveToNext());
+            albumCursor.close();
         } else {
             if (getActivity().getCurrentFocus() != null){
                 Snackbar.make(getActivity().getCurrentFocus(), R.string.no_songs_detected_snackbar_message,
@@ -121,17 +145,16 @@ public class SongListFragment extends Fragment {
             cursor.close();
         }
 
-        //Log the song list, for debugging.
-        for (Song song : mSongs){
-            Log.i(song.getTitle(), song.getArtists()+" "+song.getId());
-        }
-
+        // Notify the adapter that new songs have been loaded to the mSongs ArrayList
         mAdapter.notifyDataSetChanged();
+        
+        // Send the song object of the first track in the ArrayList to the MainActivity to display
+        // on the mini player view.
         if(mSongs.size() > 0){
             mListener.setupFirstTrack(mSongs.get(0));
         }
 
-        // Only push song list if it is the initial load of songs.
+        // Only push the SongList if it is the initial load of songs.
         if (firstLoad){
             mListener.updateSongList(mSongs);
         }

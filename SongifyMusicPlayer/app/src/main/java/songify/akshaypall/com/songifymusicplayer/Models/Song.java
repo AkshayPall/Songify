@@ -1,6 +1,5 @@
 package songify.akshaypall.com.songifymusicplayer.Models;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -13,20 +12,23 @@ import android.os.Parcelable;
  */
 
 public class Song implements Parcelable {
-    private long id;
-    private String title;
-    private String artists;
+    private long mId;
+    private String mTitle;
+    private String mArtists;
+    private String mAlbumImagePath;
 
-    public Song(long id, String title, String artists){
-        this.id = id;
-        this.title = title;
-        this.artists = artists;
+    public Song(long id, String title, String artists, String albumImagePath){
+        this.mId = id;
+        this.mTitle = title;
+        this.mArtists = artists;
+        this.mAlbumImagePath = albumImagePath;
     }
 
     protected Song(Parcel in) {
-        id = in.readLong();
-        title = in.readString();
-        artists = in.readString();
+        mId = in.readLong();
+        mTitle = in.readString();
+        mArtists = in.readString();
+        mAlbumImagePath = in.readString();
     }
 
     public static final Creator<Song> CREATOR = new Creator<Song>() {
@@ -41,16 +43,20 @@ public class Song implements Parcelable {
         }
     };
 
-    public long getId() {
-        return id;
+    public long getmId() {
+        return mId;
     }
 
-    public String getTitle() {
-        return title;
+    public String getmTitle() {
+        return mTitle;
     }
 
-    public String getArtists() {
-        return artists;
+    public String getmArtists() {
+        return mArtists;
+    }
+
+    public String getAlbumImagePath() {
+        return mAlbumImagePath;
     }
 
     @Override
@@ -60,8 +66,9 @@ public class Song implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(id);
-        dest.writeString(title);
-        dest.writeString(artists);
+        dest.writeLong(mId);
+        dest.writeString(mTitle);
+        dest.writeString(mArtists);
+        dest.writeString(mAlbumImagePath);
     }
 }

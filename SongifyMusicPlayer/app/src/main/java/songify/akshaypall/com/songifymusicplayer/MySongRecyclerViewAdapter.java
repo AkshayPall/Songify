@@ -1,6 +1,8 @@
 package songify.akshaypall.com.songifymusicplayer;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,13 +43,11 @@ class MySongRecyclerViewAdapter extends
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Song song = mSongs.get(position);
-        Log.i("SONG", song.getTitle()+" "+song.getArtists());
-        holder.mTitle.setText(song.getTitle());
-        holder.mArtists.setText(song.getArtists());
-        //TODO: set album image
+        holder.mTitle.setText(song.getmTitle());
+        holder.mArtists.setText(song.getmArtists());
+        holder.mAlbumImage.setImageDrawable(Drawable.createFromPath(song.getAlbumImagePath()));
 
-        Log.wtf("Current Song", "--View-- "+song.getTitle()+holder.mTitle.getText());
-
+        // On click to play the selected song (send to the playback service)
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,7 +60,6 @@ class MySongRecyclerViewAdapter extends
 
     @Override
     public int getItemCount() {
-        Log.i("SONG SIZE", ""+mSongs.size());
         return mSongs.size();
     }
 

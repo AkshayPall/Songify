@@ -4,17 +4,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.media.MediaPlayer;
 import android.os.IBinder;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContentResolverCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -24,18 +15,15 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.jar.Manifest;
 
 import songify.akshaypall.com.songifymusicplayer.Models.Song;
 import songify.akshaypall.com.songifymusicplayer.Services.PlaybackService;
@@ -98,7 +86,13 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
 
             @Override
             public void onPageSelected(int position) {
+                // Update the toolbar with the appropriate title, based on which
+                // fragment is in focus
                 toolbar.setTitle(mHomePagerAdapter.getPageTitle(position));
+
+                // Animate the mini player bar at the bottom of the activity. This means it only
+                // is visible when looking at the song list fragment, as it is redundant to have it
+                // when viewing the MediaPlayerFragment.
                 float displayHeight = context.getResources().getDisplayMetrics().heightPixels;
                 float yDelta = displayHeight - playerStatePackage.getHeight();
                 if (position == 1){
@@ -113,6 +107,13 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
             }
         });
 
+        // Change state (Play/Pause) of current song in the PlaybackService
+        mMiniPlayerFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPlaybackService.changeStateSong();
+            }
+        });
     }
 
     @Override
@@ -124,18 +125,9 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-
-            // TODO: remove later, this is for test only
-            stopService(mPlayIntent);
-            mPlaybackService = null;
-            return true;
+        switch (item.getItemId()){
+            case R.id.action_settings:
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -150,12 +142,16 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
 
     @Override
     public void onPressedSong(Song song) {
-        updateCurrentSong(song);
-        // update playback service
-        if (mPlaybackService != null){
-            Log.wtf(SERVICE_TAG, "pressed song, playing now");
-            mPlaybackService.setSong(song);
-            mPlaybackService.playSong();
+        // Prevent unneccessary reassignment and replaying of song if it is already the current one
+        // Loaded.
+        if (song != mCurrentSong){
+            updateCurrentSong(song);
+            // update playback service
+            if (mPlaybackService != null){
+                Log.wtf(SERVICE_TAG, "pressed song, playing now");
+                mPlaybackService.setSong(song);
+                mPlaybackService.playSong();
+            }
         }
     }
 
@@ -203,8 +199,8 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
     private void updateCurrentSong(Song song) {
         mCurrentSong = song;
         //TODO: update album image
-        mCurrentSongTitle.setText(song.getTitle());
-        mCurrentSongArtists.setText(song.getArtists());
+        mCurrentSongTitle.setText(song.getmTitle());
+        mCurrentSongArtists.setText(song.getmArtists());
     }
 
     /**
