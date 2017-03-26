@@ -91,6 +91,8 @@ public class SongListFragment extends Fragment {
     }
 
     private void updateSongData(){
+        boolean firstLoad = mSongs.size() == 0;
+
         Cursor cursor = getActivity().getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 null, null, null, null
@@ -128,7 +130,11 @@ public class SongListFragment extends Fragment {
         if(mSongs.size() > 0){
             mListener.setupFirstTrack(mSongs.get(0));
         }
-        mListener.updateSongList(mSongs);
+
+        // Only push song list if it is the initial load of songs.
+        if (firstLoad){
+            mListener.updateSongList(mSongs);
+        }
     }
 
     @Override

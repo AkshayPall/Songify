@@ -28,6 +28,7 @@ public class PlaybackService extends Service implements
 
 
     private static final String ERROR_TAG = "PlaybackService_Error";
+    private static final String UPDATE_TAG = "PlayBackService_Update";
     private ArrayList<Song> mSongs;
     private int mSongPos;
     private MediaPlayer mPlayer;
@@ -91,20 +92,26 @@ public class PlaybackService extends Service implements
     /** Methods for music playback and state control **/
     public void playSong(){
         mPlayer.reset();
-        Song toPlay = mSongs.get(mSongPos);
-        Uri songUri = ContentUris.withAppendedId(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, toPlay.getId());
-        try {
-            mPlayer.setDataSource(getApplicationContext(), songUri);
-            mPlayer.prepareAsync();
-            // now after the player is asynchronously readied, the onPrepared method is invoked
-        } catch (Exception e){
-            //TODO: add interface to make a snackbar pop up when playback error occurs
-            Log.wtf(ERROR_TAG, "Could not play song. ");
+        if (mSongPos < mSongs.size()){
+            Song toPlay = mSongs.get(mSongPos);
+            Uri songUri = ContentUris.withAppendedId(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, toPlay.getId());
+            try {
+                mPlayer.setDataSource(getApplicationContext(), songUri);
+                mPlayer.prepareAsync();
+                // now after the player is asynchronously readied, the onPrepared method is invoked
+            } catch (Exception e){
+                //TODO: add interface to make a snackbar pop up when playback error occurs
+                Log.wtf(ERROR_TAG, "Could not play song. ");
+            }
+        } else {
+            Log.wtf(ERROR_TAG, "index out of bounds for song in song arraylist. Possible that " +
+                                "song list is empty");
         }
     }
 
     public void updateSongList(ArrayList<Song> songs){
+        Log.wtf(UPDATE_TAG, "updated songs list");
         mSongs.clear();
         mSongs.addAll(songs);
     }
@@ -112,6 +119,7 @@ public class PlaybackService extends Service implements
     public void setSong(Song song){
         int index = mSongs.indexOf(song);
         if (index != -1){
+            Log.wtf(ERROR_TAG, "song not in index!");
             mSongPos = index;
         }
     }

@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
 
     private static Song mCurrentSong;
     private ImageView mCurrentSongAlbumImage;
+    private ArrayList<Song> mInQueueSongs;
     private TextView mCurrentSongTitle;
     private TextView mCurrentSongArtists;
     private FloatingActionButton mMiniPlayerFab;
@@ -57,35 +58,19 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
     private Intent mPlayIntent;
 
     // Setup for the music player
-    private ServiceConnection mPlaybackConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            PlaybackService.PlaybackBinder binder = (PlaybackService.PlaybackBinder) service;
-            mPlaybackService = binder.getService();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-        }
-    };
+    private ServiceConnection mPlaybackConnection;
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        // Bind the service to an intent and then start the service
-        if (mPlayIntent == null){
-            mPlayIntent = new Intent(this, PlaybackService.class);
-            bindService(mPlayIntent, mPlaybackConnection, Context.BIND_AUTO_CREATE);
-            startService(mPlayIntent);
-            Log.wtf(SERVICE_TAG, "Started playback service!");
-        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mInQueueSongs = new ArrayList<>();
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -157,10 +142,21 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
     }
 
     @Override
+    protected void onDestroy() {
+        stopService(mPlayIntent);
+        mPlaybackService = null;
+        super.onDestroy();
+    }
+
+    @Override
     public void onPressedSong(Song song) {
         updateCurrentSong(song);
         // update playback service
-        mPlaybackService.setSong(song);
+        if (mPlaybackService != null){
+            Log.wtf(SERVICE_TAG, "pressed song, playing now");
+            mPlaybackService.setSong(song);
+            mPlaybackService.playSong();
+        }
     }
 
     @Override
@@ -170,8 +166,38 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
 
     @Override
     public void updateSongList(ArrayList<Song> song) {
+        boolean firstLoad = mInQueueSongs.size() == 0;
+        mInQueueSongs.clear();
+        mInQueueSongs.addAll(song);
+        // If it is the first time the song list was updated
+        if (firstLoad){
+            mPlaybackConnection = new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    PlaybackService.PlaybackBinder binder = (PlaybackService.PlaybackBinder) service;
+                    mPlaybackService = binder.getService();
+                    mPlaybackService.updateSongList(mInQueueSongs);
+                }
 
-        mPlaybackService.updateSongList(song);
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                }
+            };
+
+            // Bind the service to an intent and then start the service
+            if (mPlayIntent == null){
+                mPlayIntent = new Intent(this, PlaybackService.class);
+                bindService(mPlayIntent, mPlaybackConnection, Context.BIND_AUTO_CREATE);
+                startService(mPlayIntent);
+                Log.wtf(SERVICE_TAG, "Started playback service!");
+            }
+        }
+        else if (mPlaybackService != null){
+            Log.wtf(SERVICE_TAG, "Update song list!");
+            mPlaybackService.updateSongList(song);
+        } else {
+            Log.wtf(SERVICE_TAG, "playback service is null, could not pass list");
+        }
     }
 
     private void updateCurrentSong(Song song) {
