@@ -1,8 +1,13 @@
 package songify.akshaypall.com.songifymusicplayer;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaPlayer;
+import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -33,9 +38,13 @@ import java.util.ArrayList;
 import java.util.jar.Manifest;
 
 import songify.akshaypall.com.songifymusicplayer.Models.Song;
+import songify.akshaypall.com.songifymusicplayer.Services.PlaybackService;
 import songify.akshaypall.com.songifymusicplayer.ViewPageTransformers.SlideInTransformer;
 
 public class MainActivity extends AppCompatActivity implements SongListFragment.OnSongListFragmentListener{
+
+    // TAGs for logging
+    private static final String SERVICE_TAG = "PLAYBACK SERVICE";
 
     private static Song mCurrentSong;
     private ImageView mCurrentSongAlbumImage;
@@ -43,11 +52,35 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
     private TextView mCurrentSongArtists;
     private FloatingActionButton mMiniPlayerFab;
 
-    /**
-     * This is a static list of all the songs (as {@link Song} objects) on the device. It is to be
-     * filled with data when MainActivity is instantiated and occasionally refreshed (in case new
-     * songs are added and old songs are deleted)
-     */
+    // Service and fields necessary for the music player
+    private PlaybackService mPlaybackService;
+    private Intent mPlayIntent;
+
+    // Setup for the music player
+    private ServiceConnection mPlaybackConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            PlaybackService.PlaybackBinder binder = (PlaybackService.PlaybackBinder) service;
+            mPlaybackService = binder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Bind the service to an intent and then start the service
+        if (mPlayIntent == null){
+            mPlayIntent = new Intent(this, PlaybackService.class);
+            bindService(mPlayIntent, mPlaybackConnection, Context.BIND_AUTO_CREATE);
+            startService(mPlayIntent);
+            Log.wtf(SERVICE_TAG, "Started playback service!");
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +146,10 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            // TODO: remove later, this is for test only
+            stopService(mPlayIntent);
+            mPlaybackService = null;
             return true;
         }
 
@@ -122,11 +159,19 @@ public class MainActivity extends AppCompatActivity implements SongListFragment.
     @Override
     public void onPressedSong(Song song) {
         updateCurrentSong(song);
+        // update playback service
+        mPlaybackService.setSong(song);
     }
 
     @Override
     public void setupFirstTrack(Song song) {
         updateCurrentSong(song);
+    }
+
+    @Override
+    public void updateSongList(ArrayList<Song> song) {
+
+        mPlaybackService.updateSongList(song);
     }
 
     private void updateCurrentSong(Song song) {

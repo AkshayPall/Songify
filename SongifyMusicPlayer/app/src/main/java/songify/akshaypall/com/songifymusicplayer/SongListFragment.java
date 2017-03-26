@@ -128,6 +128,7 @@ public class SongListFragment extends Fragment {
         if(mSongs.size() > 0){
             mListener.setupFirstTrack(mSongs.get(0));
         }
+        mListener.updateSongList(mSongs);
     }
 
     @Override
@@ -172,5 +173,6 @@ public class SongListFragment extends Fragment {
     interface OnSongListFragmentListener {
         void onPressedSong(Song song);
         void setupFirstTrack(Song song);
+        void updateSongList(ArrayList<Song> song);
     }
 }
