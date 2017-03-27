@@ -147,7 +147,7 @@ public class SongListFragment extends Fragment {
 
         // Notify the adapter that new songs have been loaded to the mSongs ArrayList
         mAdapter.notifyDataSetChanged();
-        
+
         // Send the song object of the first track in the ArrayList to the MainActivity to display
         // on the mini player view.
         if(mSongs.size() > 0){
