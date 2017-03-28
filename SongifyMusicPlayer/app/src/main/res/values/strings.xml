@@ -8,4 +8,8 @@
     <string name="song_title_default">Unknown Track</string>
     <string name="song_artists_default">Unknown Artist</string>
     <string name="no_songs_detected_snackbar_message">No songs detected!</string>
+    <string name="media_player_song_title_placeholder">Please Select a Song</string>
+    <string name="media_player_song_artists_placeholder">-</string>
+    <string name="media_player_song_start_time_placeholder">0:00</string>
+    <string name="media_player_song_end_time_placeholder">4:20</string>
 </resources>

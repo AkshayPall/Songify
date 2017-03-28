@@ -14,5 +14,6 @@
     <dimen name="song_album_image_size">36dp</dimen>
     <dimen name="song_item_top_bot_padding">8dp</dimen>
     <dimen name="song_item_side_padding">16dp</dimen>
+    <dimen name="media_player_overall_padding">32dp</dimen>
 
 </resources>

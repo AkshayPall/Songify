@@ -41,23 +41,10 @@ public class SongListFragment extends Fragment {
     public SongListFragment() {
     }
 
-    @SuppressWarnings("unused")
-    public static SongListFragment newInstance() {
-//        SongListFragment fragment = new SongListFragment();
-//        Bundle args = new Bundle();
-//        args.putParcelableArrayList(ARG_SONGS, songs);
-//        fragment.setArguments(args);
-        return new SongListFragment();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        if (getArguments() != null) {
-//            mSongs = getArguments().getParcelableArrayList(ARG_SONGS);
-//        }
-    }
+            }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

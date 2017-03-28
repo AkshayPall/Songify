@@ -33,6 +33,7 @@ public class PlaybackService extends Service implements
     private int mSongPos;
     private MediaPlayer mPlayer;
     private final PlaybackBinder mBinder = new PlaybackBinder();
+    private boolean isPlaying = false;
 
     @Override
     public void onCreate() {
@@ -52,6 +53,9 @@ public class PlaybackService extends Service implements
         mPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
+        // loop by default
+        mPlayer.setLooping(true);
+
         // set the interfaces
         mPlayer.setOnCompletionListener(this);
         mPlayer.setOnErrorListener(this);
@@ -65,7 +69,6 @@ public class PlaybackService extends Service implements
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-
     }
 
     @Override
@@ -75,6 +78,8 @@ public class PlaybackService extends Service implements
 
     @Override
     public void onPrepared(MediaPlayer mp) {
+        mp.setLooping(true);
+        isPlaying = true;
         mp.start();
     }
 
@@ -124,10 +129,15 @@ public class PlaybackService extends Service implements
         // Play/Pause a song, this is called in place of playSong when the current/already selected
         // song is selected for playback
         if(mPlayer.isPlaying()){
+            isPlaying = false;
             mPlayer.pause();
         } else {
             mPlayer.start();
         }
+    }
+
+    public boolean isPlaying() {
+        return this.isPlaying;
     }
 
     // Take in an ArrayList of Songs to update the service with playback. This comes from the
