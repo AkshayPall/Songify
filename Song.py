@@ -29,7 +29,7 @@ class SongData(declarative_base()):
 # - if movement is a phrase (not # change) then append
     if len(self.movement) > 2:
       print 'movement is a string'
-      desc.append(str(self.movement + ' in the charts!\n'))
+      desc.append(str(self.movement) + ' in the charts!\n')
 # - at peak
     if self.rank_peak == self.rank_current and self.weeks > 1:
       print 'song is at peak and not new'
@@ -44,8 +44,8 @@ class SongData(declarative_base()):
 # - decreasing (on the way out)
     if self.rank_last - self.rank_current >= LARGE_DELTA_MOVEMENT:
       print 'large delta movement DOWN'
-      desc.append(str('Seems like this track is on its way out of the'+
-      'charts. It\'s currently at #'+str(self.rank_current+'.\n')))
+      desc.append(str('Seems like this track is on its way out of the '+
+      'charts. It\'s currently at #'+str(self.rank_current) +'.\n'))
 # - weeks = 0 (user is an early adopter!)
     if self.weeks == 0 or self.weeks == 1:
       print 'new track!'
