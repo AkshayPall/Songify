@@ -60,6 +60,7 @@
             android:text="@string/media_player_song_start_time_placeholder"
             android:textColor="@android:color/darker_gray"/>
         <SeekBar
+            android:id="@+id/media_player_seekbar"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"

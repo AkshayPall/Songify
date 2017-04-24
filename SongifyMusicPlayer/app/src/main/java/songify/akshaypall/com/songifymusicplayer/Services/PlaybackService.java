@@ -22,7 +22,7 @@ import songify.akshaypall.com.songifymusicplayer.Models.Song;
 
 public class PlaybackService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
-        MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener{
+        MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
 
     // Tags for Logging
     private static final String ERROR_TAG = "PlaybackService_Error";
@@ -69,6 +69,9 @@ public class PlaybackService extends Service implements
 
     @Override
     public void onCompletion(MediaPlayer mp) {
+        // repeat! Loop!
+        //TODO: only repeat if looping is on!
+        Log.i(UPDATE_TAG, "Completed playback");
     }
 
     @Override
@@ -85,7 +88,6 @@ public class PlaybackService extends Service implements
 
     @Override
     public void onSeekComplete(MediaPlayer mp) {
-
     }
 
     @Override
@@ -93,6 +95,7 @@ public class PlaybackService extends Service implements
         // Stop operation and unbind player from service
         mPlayer.stop();
         mPlayer.release();
+        isPlaying = false;
         return false;
     }
 
@@ -132,8 +135,17 @@ public class PlaybackService extends Service implements
             isPlaying = false;
             mPlayer.pause();
         } else {
+            isPlaying = true;
             mPlayer.start();
         }
+    }
+
+    public void seekTo(int percentageOfTotalDuration){
+        isPlaying = true;
+        double pos = ((double)percentageOfTotalDuration)/100 * ((double)mPlayer.getDuration());
+        Log.i(UPDATE_TAG, "Seeked to "+pos);
+        mPlayer.seekTo(((int) pos));
+        mPlayer.start();
     }
 
     public boolean isPlaying() {
@@ -155,12 +167,19 @@ public class PlaybackService extends Service implements
         int index = mSongs.indexOf(song);
         // Prevents the case of a song being selected that is not in the mSongs ArrayList (which may
         // occur if the updateSongList method is not invoked before setSong.
-        if (index != -1){
+        if (index == -1){
             Log.wtf(ERROR_TAG, "song not in index!");
-            mSongPos = index;
         } else {
-            Log.d(ERROR_TAG, "Song not in songs arraylist");
+            mSongPos = index;
         }
+    }
+
+    public int getSongDuration(){
+        return mPlayer.getDuration()/1000;
+    }
+
+    public int getCurrentSongTimestamp(){
+        return mPlayer.getCurrentPosition()/1000;
     }
 
     /** Binder for this Service **/

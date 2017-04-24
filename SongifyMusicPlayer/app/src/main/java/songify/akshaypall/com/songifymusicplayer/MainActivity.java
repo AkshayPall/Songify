@@ -32,7 +32,7 @@ import songify.akshaypall.com.songifymusicplayer.Services.PlaybackService;
 import songify.akshaypall.com.songifymusicplayer.ViewPageTransformers.SlideInTransformer;
 
 public class MainActivity extends AppCompatActivity implements
-        SongListFragment.OnSongListFragmentListener, MediaPlayerFragment.OnFragmentInteractionListener{
+        SongListFragment.OnSongListFragmentListener, MediaPlayerFragment.PlayerFragmentListener{
 
     // TAGs for logging
     private static final String SERVICE_TAG = "PLAYBACK SERVICE";
@@ -242,8 +242,27 @@ public class MainActivity extends AppCompatActivity implements
 
         // Update the MediaPlayerFragment, only once MediaPlayer has been accessed
         if(mMediaPlayer != null){
-            mMediaPlayer.updateSongData(song);
+            int dur = mPlaybackService == null ? 0 : mPlaybackService.getSongDuration()/1000;
+            mMediaPlayer.updateSongData(song, dur);
         }
+    }
+
+    /**
+     * The following two methods update the seekbar in the MediaPlayerFragment with the
+     * correct information based on the current song
+     */
+
+    @Override
+    public void startingSeekPauseSong() {
+        if(mPlaybackService.isPlaying()){
+            mPlaybackService.changeStateSong();
+        }
+    }
+
+    @Override
+    public void updateSeekPos(int percentageOfTotalDuration) {
+        mPlaybackService.seekTo(percentageOfTotalDuration);
+        mMiniPlayerFab.setImageDrawable(getDrawable(android.R.drawable.ic_media_pause));
     }
 
     /**

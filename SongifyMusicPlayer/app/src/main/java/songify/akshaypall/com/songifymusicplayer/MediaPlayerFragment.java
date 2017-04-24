@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import songify.akshaypall.com.songifymusicplayer.Models.Song;
@@ -18,16 +19,17 @@ import songify.akshaypall.com.songifymusicplayer.Models.Song;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MediaPlayerFragment.OnFragmentInteractionListener} interface
+ * {@link MediaPlayerFragment.PlayerFragmentListener} interface
  * to handle interaction events.
  */
 public class MediaPlayerFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
+    private PlayerFragmentListener mListener;
 
     private TextView mSongTitle;
     private TextView mSongArtist;
     private LinearLayout mSeekBarSet;
+    private SeekBar mSeekBar;
 
     public MediaPlayerFragment() {
         // Required empty public constructor
@@ -50,26 +52,52 @@ public class MediaPlayerFragment extends Fragment {
         mSongArtist = (TextView)v.findViewById(R.id.media_player_song_artist);
         mSeekBarSet = (LinearLayout)v.findViewById(R.id.media_player_seek_set);
 
+        // Initialize the SeekBar
+        mSeekBar = (SeekBar)v.findViewById(R.id.media_player_seekbar);
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // Only consider the scrub when it is from the user
+                if (fromUser){
+                    mListener.updateSeekPos(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                mListener.startingSeekPauseSong();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Nothing
+            }
+        });
+        //TODO: update the song_start textview and seekbar as each second passes of a song
+        //TODO: update song_end duration every time a new track is pressed
         return v;
     }
 
-    /** UPDATE CURRENT SONG METHODS **/
-    public void updateSongData(Song song){
+    /**
+     * UPDATE CURRENT SONG METHODS
+     */
+
+    public void updateSongData(Song song, int songDuration){
         if (mSeekBarSet != null){
             mSeekBarSet.setVisibility(View.VISIBLE);
         }
         if (mSongTitle != null && mSongArtist != null){
             mSongTitle.setText(song.getmTitle());
             mSongArtist.setText(song.getmArtists());
-            // TODO: update seek bar info as well
+            // TODO: update seek bar text info as well
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof PlayerFragmentListener) {
+            mListener = (PlayerFragmentListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -92,7 +120,8 @@ public class MediaPlayerFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Add seek start, finish commands
+    interface PlayerFragmentListener {
+        void startingSeekPauseSong();
+        void updateSeekPos(int percentageOfTotalDuration);
     }
 }
