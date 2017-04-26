@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Resources;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -148,6 +149,22 @@ public class MainActivity extends AppCompatActivity implements
         mPlayerStatePackage.setVisibility(View.INVISIBLE);
         mMiniPlayerFab.setVisibility(View.INVISIBLE);
 
+        // Runnable to constantly update the seekbar current song time TextView
+        final Handler handler = new Handler();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (mPlaybackService != null && mPlaybackService.isPlaying()){
+                    mMediaPlayer.updateTimeStamps(
+                            mPlaybackService.getCurrentSongTimestamp(),
+                            mPlaybackService.getSongDuration());
+                }
+                handler.postDelayed(this, 500);
+            }
+        };
+
+        handler.post(runnable);
     }
 
     @Override
@@ -182,15 +199,15 @@ public class MainActivity extends AppCompatActivity implements
             mViewPageChanger.onPageSelected(0);
         }
 
-
-        updateCurrentSong(song);
         // update playback service
         if (mPlaybackService != null){
             Log.wtf(SERVICE_TAG, "pressed song, playing now");
             mMiniPlayerFab.setImageDrawable(getDrawable(android.R.drawable.ic_media_pause));
             mPlaybackService.setSong(song);
             mPlaybackService.playSong();
+            mMediaPlayer.updateSongData(song);
         }
+        updateCurrentSong(song);
     }
 
     @Override
@@ -239,12 +256,6 @@ public class MainActivity extends AppCompatActivity implements
         //TODO: update album image
         mCurrentSongTitle.setText(song.getmTitle());
         mCurrentSongArtists.setText(song.getmArtists());
-
-        // Update the MediaPlayerFragment, only once MediaPlayer has been accessed
-        if(mMediaPlayer != null){
-            int dur = mPlaybackService == null ? 0 : mPlaybackService.getSongDuration()/1000;
-            mMediaPlayer.updateSongData(song, dur);
-        }
     }
 
     /**
@@ -269,9 +280,9 @@ public class MainActivity extends AppCompatActivity implements
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class HomePagerAdapter extends FragmentPagerAdapter {
+    private class HomePagerAdapter extends FragmentPagerAdapter {
 
-        public HomePagerAdapter(FragmentManager fm) {
+        private HomePagerAdapter(FragmentManager fm) {
             super(fm);
             mMediaPlayer = new MediaPlayerFragment();
         }

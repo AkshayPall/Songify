@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +25,14 @@ import songify.akshaypall.com.songifymusicplayer.Models.Song;
  */
 public class MediaPlayerFragment extends Fragment {
 
+    private static final String SEEK_TAG = "SEEKING_MEDIA_PLAYER";
     private PlayerFragmentListener mListener;
 
     private TextView mSongTitle;
     private TextView mSongArtist;
     private LinearLayout mSeekBarSet;
     private SeekBar mSeekBar;
+    private int mCurrSongDuration = 100; // in seconds
 
     public MediaPlayerFragment() {
         // Required empty public constructor
@@ -82,14 +85,24 @@ public class MediaPlayerFragment extends Fragment {
      * UPDATE CURRENT SONG METHODS
      */
 
-    public void updateSongData(Song song, int songDuration){
+    public void updateSongData(Song song){
         if (mSeekBarSet != null){
             mSeekBarSet.setVisibility(View.VISIBLE);
         }
         if (mSongTitle != null && mSongArtist != null){
             mSongTitle.setText(song.getmTitle());
             mSongArtist.setText(song.getmArtists());
-            // TODO: update seek bar text info as well
+        }
+    }
+
+    public void updateTimeStamps (int currSeconds, int totalSeconds){
+        mCurrSongDuration = totalSeconds;
+        //TODO: update seek bar text info
+        Log.i(SEEK_TAG, "Currently: " + currSeconds + ", Total: " + totalSeconds);
+        if(mCurrSongDuration != 0){
+            double percent = (double)((100*currSeconds)/mCurrSongDuration);
+            Log.i(SEEK_TAG, "Percent for seek bar is " + (int)percent + " " + percent);
+            mSeekBar.setProgress((int)percent);
         }
     }
 
@@ -110,16 +123,6 @@ public class MediaPlayerFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     interface PlayerFragmentListener {
         void startingSeekPauseSong();
         void updateSeekPos(int percentageOfTotalDuration);

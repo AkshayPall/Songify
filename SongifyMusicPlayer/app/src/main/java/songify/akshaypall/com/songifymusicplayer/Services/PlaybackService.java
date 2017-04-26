@@ -175,6 +175,8 @@ public class PlaybackService extends Service implements
     }
 
     public int getSongDuration(){
+        //TODO: replace this! doesn't seem to work on some phones as its implementation is OEM
+        //      specific!
         return mPlayer.getDuration()/1000;
     }
 
