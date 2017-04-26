@@ -175,12 +175,12 @@ public class PlaybackService extends Service implements
     }
 
     public int getSongDuration(){
-        //TODO: replace this! doesn't seem to work on some phones as its implementation is OEM
-        //      specific!
+        // Returns in seconds
         return mPlayer.getDuration()/1000;
     }
 
     public int getCurrentSongTimestamp(){
+        // Returns in seconds
         return mPlayer.getCurrentPosition()/1000;
     }
 

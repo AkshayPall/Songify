@@ -55,6 +55,7 @@
         android:orientation="horizontal"
         android:layout_marginRight="@dimen/player_mini_state_fab_size">
         <TextView
+            android:id="@+id/media_player_current_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/media_player_song_start_time_placeholder"
@@ -66,6 +67,7 @@
             android:layout_height="wrap_content"
             />
         <TextView
+            android:id="@+id/media_player_total_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/media_player_song_end_time_placeholder"

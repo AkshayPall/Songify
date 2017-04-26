@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import songify.akshaypall.com.songifymusicplayer.Models.Song;
 
 
@@ -30,9 +32,15 @@ public class MediaPlayerFragment extends Fragment {
 
     private TextView mSongTitle;
     private TextView mSongArtist;
+
+    // Needed to hide the seekbar when the app is first created (before any song is selected, to
+    // avoid unexpected user behaviour)
     private LinearLayout mSeekBarSet;
+
+    // To update the current position/time and total time of a song every second
     private SeekBar mSeekBar;
-    private int mCurrSongDuration = 100; // in seconds
+    private TextView mTotalSongTime;
+    private TextView mCurrSongTime;
 
     public MediaPlayerFragment() {
         // Required empty public constructor
@@ -55,7 +63,7 @@ public class MediaPlayerFragment extends Fragment {
         mSongArtist = (TextView)v.findViewById(R.id.media_player_song_artist);
         mSeekBarSet = (LinearLayout)v.findViewById(R.id.media_player_seek_set);
 
-        // Initialize the SeekBar
+        // Initialize the SeekBar and its accompanying textviews
         mSeekBar = (SeekBar)v.findViewById(R.id.media_player_seekbar);
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -76,8 +84,9 @@ public class MediaPlayerFragment extends Fragment {
                 // Nothing
             }
         });
-        //TODO: update the song_start textview and seekbar as each second passes of a song
-        //TODO: update song_end duration every time a new track is pressed
+        mCurrSongTime = (TextView)v.findViewById(R.id.media_player_current_time);
+        mTotalSongTime = (TextView)v.findViewById(R.id.media_player_total_time);
+
         return v;
     }
 
@@ -96,14 +105,26 @@ public class MediaPlayerFragment extends Fragment {
     }
 
     public void updateTimeStamps (int currSeconds, int totalSeconds){
-        mCurrSongDuration = totalSeconds;
-        //TODO: update seek bar text info
-        Log.i(SEEK_TAG, "Currently: " + currSeconds + ", Total: " + totalSeconds);
-        if(mCurrSongDuration != 0){
-            double percent = (double)((100*currSeconds)/mCurrSongDuration);
-            Log.i(SEEK_TAG, "Percent for seek bar is " + (int)percent + " " + percent);
-            mSeekBar.setProgress((int)percent);
+        // Update the seek bar with the right progress level
+        if (mSeekBarSet != null){
+            Log.i(SEEK_TAG, "Currently: " + currSeconds + ", Total: " + totalSeconds);
+            if(totalSeconds != 0){
+                double percent = (double)((100*currSeconds)/totalSeconds);
+                Log.i(SEEK_TAG, "Percent for seek bar is " + (int)percent + " " + percent);
+                mSeekBar.setProgress((int)percent);
+            }
+
+            // Update the textviews for current and end time!
+            int curMin = currSeconds/60;
+            int totalMin = totalSeconds/60;
+            // Using Canadian Locale to control the format of the text in all regions
+            // Also Canadian pride :)
+            mCurrSongTime.setText(String.format(
+                    Locale.CANADA,"%d:%02d", curMin, currSeconds-60*curMin));
+            mTotalSongTime.setText(String.format(
+                    Locale.CANADA,"%d:%02d", totalMin, totalSeconds-60*totalMin));
         }
+
     }
 
     @Override
