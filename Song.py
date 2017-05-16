@@ -1,6 +1,7 @@
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, Column, Integer, String
+# from sqlalchemy.orm import sessionmaker
 
 class SongData(declarative_base()):
   __tablename__ = 'hot_songs.db'
@@ -12,12 +13,16 @@ class SongData(declarative_base()):
   rank_last = Column(Integer)
   weeks = Column(Integer)
   movement = Column(String)
+  # spotifyID = Column(String)
+  # spotifyUrl = Column(String)
+  # videoUrl = Column(String)
 
   def __rep__(self):
     return"<SongData(title='%s',artist='%s',peak='%s',current='%s',last='%s',"
-    "weeks='%s',movement='%s')>" % (
+    "weeks='%s',movement='%s',spotifyID='%s',spotifyUrl='%s',videoUrl='%s')>" % (
       self.title, self.artist, self.rank_peak, self.rank_current,
-      self.rank_last, self.weeks, self.movement)
+      self.rank_last, self.weeks, self.movement, self.spotifyID,
+      self.spotifyUrl, self.videoUrl)
 
 # Parse song data to return interesting information
   def parseData(self):
@@ -57,3 +62,10 @@ class SongData(declarative_base()):
       str(self.weeks)+' weeks now.\n')
 
     return ''.join(desc)
+
+
+engine = create_engine('sqlite:////hot_songs.db',echo=False)
+Base = declarative_base()
+Base.metadata.create_all(engine)
+session = sessionmaker(bind=engine)()
+session.commit()
