@@ -18,15 +18,15 @@ class SongData(declarative_base()):
   videoUrl = Column(String)
 
   def __rep__(self):
-    return"<SongData(title='%s',artist='%s',peak='%s',current='%s',last='%s',"
-    "weeks='%s',movement='%s',spotifyID='%s',spotifyUrl='%s',videoUrl='%s')>" % (
-      self.title, self.artist, self.rank_peak, self.rank_current,
-      self.rank_last, self.weeks, self.movement, self.spotifyID,
-      self.spotifyUrl, self.videoUrl)
+    return"""<SongData(title='%s',artists='%s',peak='%s',current='%s',last='%s',
+            weeks='%s',movement='%s',spotifyID='%s',spotifyUrl='%s',videoUrl
+            ='%s')>""" % (self.title, self.artists, self.rank_peak,
+            self.rank_current, self.rank_last, self.weeks, self.movement,
+            self.spotifyID, self.spotifyUrl, self.videoUrl)
 
 # Parse song data to return interesting information
   def parseData(self):
-    print '', repr(self)
+    print '', self.__rep__()
     print self.title, self.movement
     LARGE_DELTA_MOVEMENT = 5
     desc = []
