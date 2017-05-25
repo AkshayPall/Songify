@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, Column, Integer, String
 # from sqlalchemy.orm import sessionmaker
 
 class SongData(declarative_base()):
-  __tablename__ = 'hot_songs.db'
+  __tablename__ = 'top_songs.db'
   id = Column(Integer, primary_key=True)
   title = Column(String)
   artists = Column(String)
@@ -13,9 +13,9 @@ class SongData(declarative_base()):
   rank_last = Column(Integer)
   weeks = Column(Integer)
   movement = Column(String)
-  # spotifyID = Column(String)
-  # spotifyUrl = Column(String)
-  # videoUrl = Column(String)
+  spotifyID = Column(String)
+  spotifyUrl = Column(String)
+  videoUrl = Column(String)
 
   def __rep__(self):
     return"<SongData(title='%s',artist='%s',peak='%s',current='%s',last='%s',"
@@ -26,7 +26,7 @@ class SongData(declarative_base()):
 
 # Parse song data to return interesting information
   def parseData(self):
-    repr(self)
+    print '', repr(self)
     print self.title, self.movement
     LARGE_DELTA_MOVEMENT = 5
     desc = []
@@ -62,10 +62,3 @@ class SongData(declarative_base()):
       str(self.weeks)+' weeks now.\n')
 
     return ''.join(desc)
-
-
-engine = create_engine('sqlite:////hot_songs.db',echo=False)
-Base = declarative_base()
-Base.metadata.create_all(engine)
-session = sessionmaker(bind=engine)()
-session.commit()

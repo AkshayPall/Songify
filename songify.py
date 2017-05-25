@@ -11,7 +11,7 @@ SongData = Song.SongData
 DATA_NOT_FOUND_MESSAGE = 'Sorry! We couldn\'t find data on this track!'
 SONG_TITLE_ARG = 'song_title'
 SONG_ARTISTS_ARG = 'artists'
-DATABASE_ARG='sqlite:////hot_songs.db'
+DATABASE_ARG='sqlite:///top_songs.db'
 
 
 # Data request function

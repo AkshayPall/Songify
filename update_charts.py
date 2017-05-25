@@ -7,8 +7,8 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine('sqlite:////hot_songs.db',echo=False)
 Base = declarative_base()
+engine = create_engine('sqlite:///top_songs.db',echo=True)
 Base.metadata.create_all(engine)
 session = sessionmaker(bind=engine)()
 SongData = Song.SongData
@@ -35,7 +35,7 @@ for hit_song in chart:
         to_update_song.spotifyID = song.spotifyID
         to_update_song.spotifyUrl = song.spotifyUrl
         to_update_song.videoUrl = song.videoUrl
-        print 'Updated ', to_update_song.title
+        print 'Updated ', to_update_song.repr()
     else:
         session.add(song)
         print 'Added song ', song.title
