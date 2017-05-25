@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, make_response, jsonify
 import billboard, sqlalchemy, Song
 from sqlalchemy import create_engine, Column, Integer, String, and_
 from sqlalchemy.ext.declarative import declarative_base
@@ -33,5 +33,6 @@ def get_songs():
         SongData.title.ilike(giv_song),
         SongData.artists.ilike(giv_artist))).first()
         if song != None and song.title != None:
-            return song.parseData()
-    return DATA_NOT_FOUND_MESSAGE
+            # TODO: jsonify the song's attributes!
+            return make_response(jsonify(song.__rep__(), song.parseData()))
+    return make_response(DATA_NOT_FOUND_MESSAGE)
