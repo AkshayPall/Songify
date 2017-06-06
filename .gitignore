@@ -8,6 +8,9 @@ local.properties
 *.db-journal
 env/
 
+# Keystores
+keys.xml
+
 # User config
 .idea/libraries/
 .idea/workspace.xml
