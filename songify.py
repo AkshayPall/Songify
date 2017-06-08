@@ -17,12 +17,7 @@ REQUEST_TRACK_ID = 'track_id'
 # Data request function
 @app.route('/', methods=['GET'])
 def get_songs():
-    engine = create_engine(DATABASE_ARG,echo=False)
-    Base = declarative_base()
-    Base.metadata.create_all(engine)
-    session = sessionmaker(bind=engine)()
-
-    #chart = billboard.ChartData('hot-100')
+    session = setup_db()
     giv_song = request.args.get(SONG_TITLE_ARG)
     giv_artist = request.args.get(SONG_ARTISTS_ARG)
     # TODO: remove parenthesis and other characters from arguments
@@ -38,13 +33,22 @@ def get_songs():
     return make_response(DATA_NOT_FOUND_MESSAGE)
 
 
-# Track Conver Art Request function
+# Track Cover Art Request function
 @app.route('/cover_art/', methods=['GET'])
 def get_cover_art():
     track_id = request.args.get(REQUEST_TRACK_ID)
+    session = setup_db()
+    if (len(track_id) > 0):
+        song = session.query(SongData).filter(
+        SongData.spotifyID == track_id).first()
+    if (song != None):
+        #TODO: return cover art photo! use the spotifyID to pull out image URL
+        return make_response(jsonify(song.__rep__()))
+    return make_response(DATA_NOT_FOUND_MESSAGE)
+
+# Helper Functions
+def setup_db():
     engine = create_engine(DATABASE_ARG,echo=False)
     Base = declarative_base()
     Base.metadata.create_all(engine)
-    session = sessionmaker(bind=engine)()
-     #TODO return data
-    return make_response(DATA_NOT_FOUND_MESSAGE)
+    return sessionmaker(bind=engine)()
