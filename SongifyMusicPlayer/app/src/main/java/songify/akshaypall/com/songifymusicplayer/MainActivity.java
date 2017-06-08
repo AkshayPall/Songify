@@ -26,11 +26,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.spotify.sdk.android.authentication.AuthenticationClient;
+import com.spotify.sdk.android.authentication.AuthenticationRequest;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;
+
 import java.util.ArrayList;
 
+import songify.akshaypall.com.songifymusicplayer.HttpManagers.SpotifyManager;
 import songify.akshaypall.com.songifymusicplayer.Models.Song;
 import songify.akshaypall.com.songifymusicplayer.Services.PlaybackService;
 import songify.akshaypall.com.songifymusicplayer.ViewPageTransformers.SlideInTransformer;
+
+import static songify.akshaypall.com.songifymusicplayer.HttpManagers.SpotifyManager.LOGIN_REQUEST_CODE;
 
 public class MainActivity extends AppCompatActivity implements
         SongListFragment.OnSongListFragmentListener, MediaPlayerFragment.PlayerFragmentListener{
@@ -62,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Log into and Authenticate Spotify if necessary
+        SpotifyManager.authenticateSpotify(this);
 
         mInQueueSongs = new ArrayList<>();
 
@@ -208,6 +218,26 @@ public class MainActivity extends AppCompatActivity implements
             mMediaPlayer.updateSongData(song);
         }
         updateCurrentSong(song);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOGIN_REQUEST_CODE) {
+            AuthenticationResponse response = AuthenticationClient
+                    .getResponse(LOGIN_REQUEST_CODE, data);
+            switch (response.getType()){
+                // If received token
+                case TOKEN:
+//                    TODO: STORE THIS SOMEWHERE
+                    break;
+                default:
+                    // either ERROR or auth flow was cancelled
+//                    TODO: store a "not authorized to use spotify" flag somewhere and use it to
+                    // check before making any spotify calls
+                    break;
+            }
+        }
     }
 
     @Override
