@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 app = Flask(__name__)
 SongData = Song.SongData
 
-# Values for rerference
+# Values for reference
 DATA_NOT_FOUND_MESSAGE = 'Sorry! We couldn\'t find data on this track!'
 SONG_TITLE_ARG = 'song_title'
 SONG_ARTISTS_ARG = 'artists'
