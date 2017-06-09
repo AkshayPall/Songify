@@ -3,6 +3,8 @@ import billboard, sqlalchemy, Song
 from sqlalchemy import create_engine, Column, Integer, String, and_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import SpotifyManager
+import requests
 
 app = Flask(__name__)
 SongData = Song.SongData
@@ -13,6 +15,7 @@ SONG_TITLE_ARG = 'song_title'
 SONG_ARTISTS_ARG = 'artists'
 DATABASE_ARG='sqlite:///top_songs.db'
 REQUEST_TRACK_ID = 'track_id'
+REQUEST_ACCESS_TOKEN = 'access_token'
 
 # Data request function
 @app.route('/', methods=['GET'])
@@ -36,14 +39,18 @@ def get_songs():
 # Track Cover Art Request function
 @app.route('/cover_art/', methods=['GET'])
 def get_cover_art():
-    track_id = request.args.get(REQUEST_TRACK_ID)
     session = setup_db()
-    if (len(track_id) > 0):
-        song = session.query(SongData).filter(
-        SongData.spotifyID == track_id).first()
-    if (song != None):
-        #TODO: return cover art photo! use the spotifyID to pull out image URL
-        return make_response(jsonify(song.__rep__()))
+    giv_song = request.args.get(SONG_TITLE_ARG)
+    giv_artist = request.args.get(SONG_ARTISTS_ARG)
+    print 'SEARCH: ',giv_song,'\t',giv_artist
+    if len(giv_song) > 0 and len(giv_artist) > 0:
+        song = session.query(SongData).filter(and_(
+        SongData.title.ilike(giv_song),
+        SongData.artists.ilike(giv_artist))).first()
+        if song != None and song.title != None:
+            access_token = request.args.get(REQUEST_ACCESS_TOKEN)
+            track_data = SpotifyManager.get_track_cover_art(access_token, song.spotifyID)
+            return make_response(track_data)
     return make_response(DATA_NOT_FOUND_MESSAGE)
 
 # Helper Functions

@@ -229,12 +229,11 @@ public class MainActivity extends AppCompatActivity implements
             switch (response.getType()){
                 // If received token
                 case TOKEN:
-//                    TODO: STORE THIS SOMEWHERE
+                    SpotifyManager.ACCESS_TOKEN = response.getAccessToken();
                     break;
                 default:
+                    SpotifyManager.ACCESS_TOKEN = SpotifyManager.NULL_ACCESS_TOKEN;
                     // either ERROR or auth flow was cancelled
-//                    TODO: store a "not authorized to use spotify" flag somewhere and use it to
-                    // check before making any spotify calls
                     break;
             }
         }

@@ -14,7 +14,10 @@ import songify.akshaypall.com.songifymusicplayer.R;
 
 public class SpotifyManager {
 
+    public static final String NULL_ACCESS_TOKEN = "";
+
     public static int LOGIN_REQUEST_CODE = 1;
+    public static String ACCESS_TOKEN = NULL_ACCESS_TOKEN;
 
     /**
      * Used to get access token to make any calls to the Spotify Api
@@ -26,7 +29,7 @@ public class SpotifyManager {
                 AuthenticationResponse.Type.TOKEN,
                 callingActivity.getResources().getString(R.string.spotify_redirect_uri)
         );
-        builder.setScopes(new String[]{"streaming"}); //TODO: change this? spotify is just used for metadata
+//        builder.setScopes(new String[]{"streaming"});
         AuthenticationRequest request = builder.build();
         AuthenticationClient.openLoginActivity(
                 callingActivity,
