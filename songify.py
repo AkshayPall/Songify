@@ -30,7 +30,6 @@ def get_songs():
         SongData.title.ilike(giv_song),
         SongData.artists.ilike(giv_artist))).first()
         if song != None and song.title != None:
-            # TODO: jsonify the song's attributes!
             return make_response(jsonify(song.__rep__(), song.parseData()))
     return make_response(DATA_NOT_FOUND_MESSAGE)
 
