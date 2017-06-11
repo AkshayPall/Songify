@@ -7,4 +7,4 @@ def get_track_cover_art(access_token, spotifyID):
     oauth_header = "Bearer "+access_token
     headers = {'Authorization':oauth_header}
     r = requests.get(url, headers=headers)
-    return r.json()
+    return r.content
