@@ -4,7 +4,6 @@ from sqlalchemy import create_engine, Column, Integer, String, and_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import SpotifyManager
-import requests
 
 app = Flask(__name__)
 SongData = Song.SongData
@@ -50,7 +49,7 @@ def get_cover_art():
         if song != None and song.title != None:
             access_token = request.args.get(REQUEST_ACCESS_TOKEN)
             track_data = SpotifyManager.get_track_cover_art(access_token, song.spotifyID)
-            return make_response(track_data)
+            return make_response(jsonify(track_data))
     return make_response(DATA_NOT_FOUND_MESSAGE)
 
 # Helper Functions
