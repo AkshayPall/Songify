@@ -99,8 +99,8 @@ public class MediaPlayerFragment extends Fragment {
             mSeekBarSet.setVisibility(View.VISIBLE);
         }
         if (mSongTitle != null && mSongArtist != null){
-            mSongTitle.setText(song.getmTitle());
-            mSongArtist.setText(song.getmArtists());
+            mSongTitle.setText(song.getTitle());
+            mSongArtist.setText(song.getArtists());
         }
     }
 

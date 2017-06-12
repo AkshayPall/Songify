@@ -3,6 +3,10 @@ package songify.akshaypall.com.songifymusicplayer.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Akshay on 2017-03-09.
  * This class is for the audio files to be read on the device for playback.
@@ -15,20 +19,20 @@ public class Song implements Parcelable {
     private long mId;
     private String mTitle;
     private String mArtists;
-    private String mAlbumImagePath;
+    private ArrayList<String> mAlbumImageUrls; // list[0] is large, list[1] is medium, list[2] is small
 
-    public Song(long id, String title, String artists, String albumImagePath){
+    public Song(long id, String title, String artists, ArrayList<String> albumImageUrls){
         this.mId = id;
         this.mTitle = title;
         this.mArtists = artists;
-        this.mAlbumImagePath = albumImagePath;
+        this.mAlbumImageUrls = albumImageUrls;
     }
 
-    protected Song(Parcel in) {
+    private Song(Parcel in) {
         mId = in.readLong();
         mTitle = in.readString();
         mArtists = in.readString();
-        mAlbumImagePath = in.readString();
+        in.readStringList(mAlbumImageUrls);
     }
 
     public static final Creator<Song> CREATOR = new Creator<Song>() {
@@ -43,20 +47,35 @@ public class Song implements Parcelable {
         }
     };
 
-    public long getmId() {
+    public long getId() {
         return mId;
     }
 
-    public String getmTitle() {
+    public String getTitle() {
         return mTitle;
     }
 
-    public String getmArtists() {
+    public String getArtists() {
         return mArtists;
     }
 
-    public String getAlbumImagePath() {
-        return mAlbumImagePath;
+    public String getLargeAlbumImagePath() {
+        if (mAlbumImageUrls == null || mAlbumImageUrls.size() < 3){
+            return "";
+        }
+        return mAlbumImageUrls.get(0);
+    }
+    public String getMediumAlbumImagePath() {
+        if (mAlbumImageUrls == null || mAlbumImageUrls.size() < 3){
+            return "";
+        }
+        return mAlbumImageUrls.get(1);
+    }
+    public String getSmallAlbumImagePath() {
+        if (mAlbumImageUrls == null || mAlbumImageUrls.size() < 3){
+            return "";
+        }
+        return mAlbumImageUrls.get(2);
     }
 
     @Override
@@ -69,6 +88,10 @@ public class Song implements Parcelable {
         dest.writeLong(mId);
         dest.writeString(mTitle);
         dest.writeString(mArtists);
-        dest.writeString(mAlbumImagePath);
+        dest.writeStringList(mAlbumImageUrls);
+    }
+
+    public void setImageUrls(ArrayList<String> imageUrls) {
+        this.mAlbumImageUrls = imageUrls;
     }
 }

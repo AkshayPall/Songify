@@ -223,6 +223,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // If logged into Spotify, retrieve an access code to make requests
         if (requestCode == LOGIN_REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient
                     .getResponse(LOGIN_REQUEST_CODE, data);
@@ -283,8 +284,8 @@ public class MainActivity extends AppCompatActivity implements
     private void updateCurrentSong(Song song) {
         // Update the mini player views
         //TODO: update album image
-        mCurrentSongTitle.setText(song.getmTitle());
-        mCurrentSongArtists.setText(song.getmArtists());
+        mCurrentSongTitle.setText(song.getTitle());
+        mCurrentSongArtists.setText(song.getArtists());
     }
 
     /**

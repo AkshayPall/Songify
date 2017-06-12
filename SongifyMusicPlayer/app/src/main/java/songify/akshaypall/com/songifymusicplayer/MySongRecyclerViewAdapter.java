@@ -43,9 +43,9 @@ class MySongRecyclerViewAdapter extends
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Song song = mSongs.get(position);
-        holder.mTitle.setText(song.getmTitle());
-        holder.mArtists.setText(song.getmArtists());
-        holder.mAlbumImage.setImageDrawable(Drawable.createFromPath(song.getAlbumImagePath()));
+        holder.mTitle.setText(song.getTitle());
+        holder.mArtists.setText(song.getArtists());
+        holder.mAlbumImage.setImageDrawable(Drawable.createFromPath(song.getLargeAlbumImagePath()));
 
         // On click to play the selected song (send to the playback service)
         holder.itemView.setOnClickListener(new View.OnClickListener() {

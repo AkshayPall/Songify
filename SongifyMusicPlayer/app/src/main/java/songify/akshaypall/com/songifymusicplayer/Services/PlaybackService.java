@@ -113,7 +113,7 @@ public class PlaybackService extends Service implements
         if (mSongPos < mSongs.size()){
             Song toPlay = mSongs.get(mSongPos);
             Uri songUri = ContentUris.withAppendedId(
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, toPlay.getmId());
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, toPlay.getId());
             try {
                 mPlayer.setDataSource(getApplicationContext(), songUri);
                 mPlayer.prepareAsync();

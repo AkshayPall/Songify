@@ -16,8 +16,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import songify.akshaypall.com.songifymusicplayer.HttpManagers.SongDataManager;
+import songify.akshaypall.com.songifymusicplayer.HttpManagers.SpotifyManager;
 import songify.akshaypall.com.songifymusicplayer.Models.Song;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A fragment representing a list of Items.
@@ -107,18 +117,42 @@ public class SongListFragment extends Fragment {
             }
             int albumArtColumn = albumCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART);
 
+            // Set up retrofit adapter to use to pull cover art URLs for each track.
+            // Currently keeping the base url hidden
+            Retrofit adapter = new Retrofit.Builder()
+                    .baseUrl(getResources().getString(R.string.base_url_web_service))
+                    .build();
+            SongDataManager.SongDataService service = adapter.create(
+                    SongDataManager.SongDataService.class);
+
             do {
                 String path = null;
                 if (albumArtColumn != -1){
                     path = cursor.getString(albumArtColumn);
                     albumCursor.moveToNext();
                 }
-                mSongs.add(new Song(
+                Song song = new Song(
                         cursor.getLong(idColumn),
                         cursor.getString(titleColumn),
                         cursor.getString(artistsColumn),
-                        path
-                ));
+                        new ArrayList<String>()
+                );
+                Map<String, String> params = new HashMap<>();
+                params.put(SongDataManager.QUERY_SONG_TITLE, song.getTitle());
+                params.put(SongDataManager.QUERY_ARTISTS, song.getArtists());
+                params.put(SongDataManager.QUERY_ACCESS_TOKEN, SpotifyManager.ACCESS_TOKEN);
+
+                Call<ArrayList<String>> call = service.getCoverArt(params);
+                try {
+                    ArrayList<String> imageUrls = call.execute().body();
+                    if (imageUrls != null && imageUrls.size() > 0){
+                        song.setImageUrls(imageUrls);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                mSongs.add(song);
             } while (cursor.moveToNext());
             albumCursor.close();
         } else {
