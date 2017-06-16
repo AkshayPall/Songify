@@ -139,7 +139,7 @@ public class SongListFragment extends Fragment {
                     path = cursor.getString(albumArtColumn);
                     albumCursor.moveToNext();
                 }
-                Song song = new Song(
+                final Song song = new Song(
                         cursor.getLong(idColumn),
                         cursor.getString(titleColumn),
                         cursor.getString(artistsColumn),
@@ -155,6 +155,12 @@ public class SongListFragment extends Fragment {
                     @Override
                     public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
                         Log.wtf(TAG, ""+response.body().size());
+                        song.setImageUrls(response.body());
+                        //TODO: read?????????
+                        for (String str : response.body()){
+                            Log.wtf(TAG, str);
+                        }
+                        mAdapter.notifyDataSetChanged();
                     }
 
                     @Override

@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
 import songify.akshaypall.com.songifymusicplayer.Models.Song;
 import java.util.ArrayList;
 
@@ -45,7 +48,9 @@ class MySongRecyclerViewAdapter extends
         final Song song = mSongs.get(position);
         holder.mTitle.setText(song.getTitle());
         holder.mArtists.setText(song.getArtists());
-        holder.mAlbumImage.setImageDrawable(Drawable.createFromPath(song.getLargeAlbumImagePath()));
+        if (!song.getSmallAlbumImagePath().isEmpty()){
+            Picasso.with(mContext).load(song.getSmallAlbumImagePath()).centerCrop().into(holder.mAlbumImage);
+        }
 
         // On click to play the selected song (send to the playback service)
         holder.itemView.setOnClickListener(new View.OnClickListener() {
