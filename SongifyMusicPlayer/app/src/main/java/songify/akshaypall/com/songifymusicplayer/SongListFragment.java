@@ -12,13 +12,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import songify.akshaypall.com.songifymusicplayer.HttpManagers.SongDataManager;
 import songify.akshaypall.com.songifymusicplayer.HttpManagers.SpotifyManager;
 import songify.akshaypall.com.songifymusicplayer.Models.Song;
@@ -119,12 +126,13 @@ public class SongListFragment extends Fragment {
 
             // Set up retrofit adapter to use to pull cover art URLs for each track.
             // Currently keeping the base url hidden
+            Gson gson = new GsonBuilder().setLenient().create();
             Retrofit adapter = new Retrofit.Builder()
                     .baseUrl(getResources().getString(R.string.base_url_web_service))
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
             SongDataManager.SongDataService service = adapter.create(
                     SongDataManager.SongDataService.class);
-
             do {
                 String path = null;
                 if (albumArtColumn != -1){
@@ -137,20 +145,24 @@ public class SongListFragment extends Fragment {
                         cursor.getString(artistsColumn),
                         new ArrayList<String>()
                 );
-                Map<String, String> params = new HashMap<>();
-                params.put(SongDataManager.QUERY_SONG_TITLE, song.getTitle());
-                params.put(SongDataManager.QUERY_ARTISTS, song.getArtists());
-                params.put(SongDataManager.QUERY_ACCESS_TOKEN, SpotifyManager.ACCESS_TOKEN);
 
-                Call<ArrayList<String>> call = service.getCoverArt(params);
-                try {
-                    ArrayList<String> imageUrls = call.execute().body();
-                    if (imageUrls != null && imageUrls.size() > 0){
-                        song.setImageUrls(imageUrls);
+                Call<ArrayList<String>> call = service.getCoverArt(
+                        song.getTitle(),
+                        song.getArtists(),
+                        SpotifyManager.ACCESS_TOKEN);
+
+                call.enqueue(new Callback<ArrayList<String>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
+                        Log.wtf(TAG, ""+response.body().size());
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<String>> call, Throwable t) {
+                        t.printStackTrace();
+                        // TODO: submit bug report && show error message to user! Could not retrieve
+                    }
+                });
 
                 mSongs.add(song);
             } while (cursor.moveToNext());

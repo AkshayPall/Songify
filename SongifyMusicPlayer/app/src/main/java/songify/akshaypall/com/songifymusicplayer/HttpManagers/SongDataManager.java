@@ -5,6 +5,7 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 /**
  * Created by Akshay on 2017-03-09.
@@ -22,6 +23,9 @@ public class SongDataManager {
     public interface SongDataService{
 
         @GET("cover_art")
-        Call<ArrayList<String>> getCoverArt(Map<String, String> params);
+        Call<ArrayList<String>> getCoverArt(
+                @Query(QUERY_SONG_TITLE) String title,
+                @Query(QUERY_ARTISTS) String artists,
+                @Query(QUERY_ACCESS_TOKEN) String accessToken);
     }
 }

@@ -94,4 +94,5 @@ public class Song implements Parcelable {
     public void setImageUrls(ArrayList<String> imageUrls) {
         this.mAlbumImageUrls = imageUrls;
     }
+
 }
