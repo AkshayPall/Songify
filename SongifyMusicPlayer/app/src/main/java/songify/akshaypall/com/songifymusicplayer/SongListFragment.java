@@ -124,15 +124,6 @@ public class SongListFragment extends Fragment {
             }
             int albumArtColumn = albumCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART);
 
-            // Set up retrofit adapter to use to pull cover art URLs for each track.
-            // Currently keeping the base url hidden
-            Gson gson = new GsonBuilder().setLenient().create();
-            Retrofit adapter = new Retrofit.Builder()
-                    .baseUrl(getResources().getString(R.string.base_url_web_service))
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .build();
-            SongDataManager.SongDataService service = adapter.create(
-                    SongDataManager.SongDataService.class);
             do {
                 String path = null;
                 if (albumArtColumn != -1){
@@ -145,31 +136,6 @@ public class SongListFragment extends Fragment {
                         cursor.getString(artistsColumn),
                         new ArrayList<String>()
                 );
-
-                Call<ArrayList<String>> call = service.getCoverArt(
-                        song.getTitle(),
-                        song.getArtists(),
-                        SpotifyManager.ACCESS_TOKEN);
-
-                call.enqueue(new Callback<ArrayList<String>>() {
-                    @Override
-                    public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
-                        Log.wtf(TAG, ""+response.body().size());
-                        song.setImageUrls(response.body());
-                        //TODO: read?????????
-                        for (String str : response.body()){
-                            Log.wtf(TAG, str);
-                        }
-                        mAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onFailure(Call<ArrayList<String>> call, Throwable t) {
-                        t.printStackTrace();
-                        // TODO: submit bug report && show error message to user! Could not retrieve
-                    }
-                });
-
                 mSongs.add(song);
             } while (cursor.moveToNext());
             albumCursor.close();
@@ -196,6 +162,52 @@ public class SongListFragment extends Fragment {
         // Only push the SongList if it is the initial load of songs.
         if (firstLoad){
             mListener.updateSongList(mSongs);
+        }
+    }
+
+    /**
+     * Used to notify the adapter once cover images and other information has loaded in
+     */
+    public void notifySongDataAdapter() {
+        // Set up retrofit adapter to use to pull cover art URLs for each track.
+        // Currently keeping the base url hidden
+
+        Log.wtf(TAG, "Make call for cover art images");
+
+        Gson gson = new GsonBuilder().setLenient().create();
+        Retrofit adapter = new Retrofit.Builder()
+                .baseUrl(getResources().getString(R.string.base_url_web_service))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        SongDataManager.SongDataService service = adapter.create(
+                SongDataManager.SongDataService.class);
+
+        for (final Song song : mSongs){
+            Call<ArrayList<String>> call = service.getCoverArt(
+                    song.getTitle(),
+                    song.getArtists(),
+                    SpotifyManager.ACCESS_TOKEN);
+
+            if (!SpotifyManager.ACCESS_TOKEN.equals(SpotifyManager.NULL_ACCESS_TOKEN)){
+                call.enqueue(new Callback<ArrayList<String>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
+                        Log.wtf(TAG, ""+response.body().size());
+                        song.setImageUrls(response.body());
+                        for (String str : response.body()){
+                            Log.wtf(TAG, str);
+                        }
+                        mAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<String>> call, Throwable t) {
+                        Log.wtf(TAG, song.getTitle()+" no links yo");
+                        t.printStackTrace();
+                        // TODO: submit bug report && show error message to user! Could not retrieve
+                    }
+                });
+            }
         }
     }
 

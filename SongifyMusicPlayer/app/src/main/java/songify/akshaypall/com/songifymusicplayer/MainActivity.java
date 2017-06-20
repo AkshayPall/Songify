@@ -44,8 +44,10 @@ public class MainActivity extends AppCompatActivity implements
 
     // TAGs for logging
     private static final String SERVICE_TAG = "PLAYBACK SERVICE";
+    private static final String TAG = "MainActivity";
 
     private MediaPlayerFragment mMediaPlayer;
+    private SongListFragment mSongDataFragment;
     private ImageView mCurrentSongAlbumImage;
     private ArrayList<Song> mInQueueSongs;
     private TextView mCurrentSongTitle;
@@ -231,9 +233,12 @@ public class MainActivity extends AppCompatActivity implements
                 // If received token
                 case TOKEN:
                     SpotifyManager.ACCESS_TOKEN = response.getAccessToken();
+                    Log.wtf(TAG, "Got access token");
+                    mSongDataFragment.notifySongDataAdapter();
                     break;
                 default:
                     SpotifyManager.ACCESS_TOKEN = SpotifyManager.NULL_ACCESS_TOKEN;
+                    Log.wtf(TAG, "Could not retrieve access token");
                     // either ERROR or auth flow was cancelled
                     break;
             }
@@ -315,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements
         private HomePagerAdapter(FragmentManager fm) {
             super(fm);
             mMediaPlayer = new MediaPlayerFragment();
+            mSongDataFragment = new SongListFragment();
         }
 
         @Override
@@ -322,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             if (position == 0){
-                return new SongListFragment();
+                return mSongDataFragment;
             } else {
                 return mMediaPlayer;
             }
