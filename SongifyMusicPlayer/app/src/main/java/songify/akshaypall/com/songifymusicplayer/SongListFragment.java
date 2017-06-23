@@ -46,7 +46,7 @@ public class SongListFragment extends Fragment {
 
 //    private static final String ARG_SONGS = "song_list";
     private static final int REQUEST_STORAGE_PERMISSION = 10;
-    private static final String TAG = "SongListFrag";
+    private static final String TAG = SongListFragment.class.getSimpleName();
     ArrayList<Song> mSongs;
     private OnSongListFragmentListener mListener;
     private MySongRecyclerViewAdapter mAdapter;
@@ -198,7 +198,6 @@ public class SongListFragment extends Fragment {
                     public void onFailure(Call<ArrayList<String>> call, Throwable t) {
                         Log.wtf(TAG, song.getTitle()+" no links yo");
                         t.printStackTrace();
-                        // TODO: submit bug report && show error message to user! Could not retrieve
                     }
                 });
             }

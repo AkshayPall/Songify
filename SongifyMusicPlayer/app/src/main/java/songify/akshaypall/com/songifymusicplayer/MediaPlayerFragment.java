@@ -1,9 +1,9 @@
 package songify.akshaypall.com.songifymusicplayer;
 
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +18,7 @@ import android.widget.TextView;
 import java.util.Locale;
 
 import songify.akshaypall.com.songifymusicplayer.Models.Song;
+import songify.akshaypall.com.songifymusicplayer.Utils.BlurBackground;
 
 
 /**
@@ -29,6 +30,7 @@ import songify.akshaypall.com.songifymusicplayer.Models.Song;
 public class MediaPlayerFragment extends Fragment implements View.OnClickListener {
 
     private static final String SEEK_TAG = "SEEKING_MEDIA_PLAYER";
+    private static final String TAG = MediaPlayerFragment.class.getSimpleName();
     private PlayerFragmentListener mListener;
 
     private TextView mSongTitle;
@@ -45,6 +47,7 @@ public class MediaPlayerFragment extends Fragment implements View.OnClickListene
 
     // To show the user the data parse of the current song playing
     private Button mSongParseInfoButton;
+    private String mSongParseData;
 
     public MediaPlayerFragment() {
         // Required empty public constructor
@@ -139,6 +142,7 @@ public class MediaPlayerFragment extends Fragment implements View.OnClickListene
 
     public void retrievedSongParseData (String msg) {
         Log.wtf("YOOO", msg);
+        mSongParseData = msg;
         mSongParseInfoButton.setVisibility(View.VISIBLE);
     }
 
@@ -163,6 +167,11 @@ public class MediaPlayerFragment extends Fragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.media_player_song_parse_button:
+                Bitmap blurBackground = BlurBackground.blur(((MainActivity)getActivity()).getRootView());
+                Intent i =  new Intent(getActivity(), SongInfoActivity.class);
+                i.putExtra(BlurBackground.KEY_BACKGROUND_BITMAP, blurBackground);
+                i.putExtra(SongInfoActivity.KEY_INFO_STRING, mSongParseData);
+                startActivity(i);
                 break;
             default:
                 break;

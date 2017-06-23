@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.res.Resources;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
@@ -17,7 +16,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -27,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
-import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 import java.util.ArrayList;
@@ -35,7 +32,6 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import songify.akshaypall.com.songifymusicplayer.HttpManagers.SongDataManager;
 import songify.akshaypall.com.songifymusicplayer.HttpManagers.SpotifyManager;
 import songify.akshaypall.com.songifymusicplayer.Models.Song;
@@ -49,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements
 
     // TAGs for logging
     private static final String SERVICE_TAG = "PLAYBACK SERVICE";
-    private static final String TAG = "MainActivity";
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private MediaPlayerFragment mMediaPlayer;
     private SongListFragment mSongDataFragment;
@@ -229,17 +225,15 @@ public class MainActivity extends AppCompatActivity implements
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
-                    if (response.raw() != null){
-                        Log.wtf(SERVICE_TAG, response.raw().body().toString());
-                    }
                     if (response.body() != null){
+                        Log.d(SERVICE_TAG, "song parse data call success");
                         mMediaPlayer.retrievedSongParseData(response.body());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
-                    Log.wtf(SERVICE_TAG, "song parse data call failed");
+                    Log.d(SERVICE_TAG, "song parse data call failed");
                     t.printStackTrace();
                 }
             });
@@ -318,6 +312,10 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    public View getRootView() {
+        return findViewById(R.id.main_content).getRootView();
+    }
+
     private void updateCurrentSong(Song song) {
         // Update the mini player views
         //TODO: update album image
@@ -376,9 +374,9 @@ public class MainActivity extends AppCompatActivity implements
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Your Tracks";
+                    return getString(R.string.actionbar_list_title);
                 case 1:
-                    return "What's Playing";
+                    return getString(R.string.actionbar_player_title);
             }
             return null;
         }
