@@ -15,5 +15,6 @@
     <dimen name="song_item_top_bot_padding">8dp</dimen>
     <dimen name="song_item_side_padding">16dp</dimen>
     <dimen name="media_player_overall_padding">32dp</dimen>
+    <dimen name="song_info_padding">16dp</dimen>
 
 </resources>

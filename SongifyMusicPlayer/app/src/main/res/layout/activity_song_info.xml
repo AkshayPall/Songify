@@ -6,4 +6,13 @@
     android:alpha="0.8"
     tools:context="songify.akshaypall.com.songifymusicplayer.SongInfoActivity">
 
+    <TextView
+        android:id="@+id/song_info_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="@dimen/song_info_padding"
+        android:text=""
+        style="@style/TextAppearance.AppCompat.Headline"/>
+
 </RelativeLayout>
