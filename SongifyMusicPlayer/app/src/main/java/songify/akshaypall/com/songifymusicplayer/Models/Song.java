@@ -20,12 +20,14 @@ public class Song implements Parcelable {
     private String mTitle;
     private String mArtists;
     private ArrayList<String> mAlbumImageUrls; // list[0] is large, list[1] is medium, list[2] is small
+    private String mDataParsed;
 
     public Song(long id, String title, String artists, ArrayList<String> albumImageUrls){
         this.mId = id;
         this.mTitle = title;
         this.mArtists = artists;
         this.mAlbumImageUrls = albumImageUrls;
+        this.mDataParsed = "";
     }
 
     private Song(Parcel in) {
@@ -33,6 +35,7 @@ public class Song implements Parcelable {
         mTitle = in.readString();
         mArtists = in.readString();
         in.readStringList(mAlbumImageUrls);
+        mDataParsed = in.readString();
     }
 
     public static final Creator<Song> CREATOR = new Creator<Song>() {
@@ -78,6 +81,10 @@ public class Song implements Parcelable {
         return mAlbumImageUrls.get(2);
     }
 
+    public String getDataParsed(){
+        return mDataParsed;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -89,6 +96,7 @@ public class Song implements Parcelable {
         dest.writeString(mTitle);
         dest.writeString(mArtists);
         dest.writeStringList(mAlbumImageUrls);
+        dest.writeString(mDataParsed);
     }
 
     public void setImageUrls(ArrayList<String> imageUrls) {

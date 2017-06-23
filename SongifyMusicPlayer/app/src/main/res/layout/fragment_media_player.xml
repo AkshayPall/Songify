@@ -73,4 +73,13 @@
             android:text="@string/media_player_song_end_time_placeholder"
             android:textColor="@android:color/darker_gray"/>
     </LinearLayout>
+    <!-- TODO: get a nice icon for this -->
+    <Button
+        android:id="@+id/media_player_song_parse_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:text="Song Info"
+        android:visibility="gone"/>
 </LinearLayout>

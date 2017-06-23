@@ -32,6 +32,11 @@ import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import songify.akshaypall.com.songifymusicplayer.HttpManagers.SongDataManager;
 import songify.akshaypall.com.songifymusicplayer.HttpManagers.SpotifyManager;
 import songify.akshaypall.com.songifymusicplayer.Models.Song;
 import songify.akshaypall.com.songifymusicplayer.Services.PlaybackService;
@@ -218,6 +223,26 @@ public class MainActivity extends AppCompatActivity implements
             mPlaybackService.setSong(song);
             mPlaybackService.playSong();
             mMediaPlayer.updateSongData(song);
+            mMediaPlayer.setParseDataButtonGone();
+            SongDataManager.SongDataService service = SongDataManager.getService(this);
+            Call<String> call = service.getSongParseData(song.getTitle(), song.getArtists());
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    if (response.raw() != null){
+                        Log.wtf(SERVICE_TAG, response.raw().body().toString());
+                    }
+                    if (response.body() != null){
+                        mMediaPlayer.retrievedSongParseData(response.body());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Log.wtf(SERVICE_TAG, "song parse data call failed");
+                    t.printStackTrace();
+                }
+            });
         }
         updateCurrentSong(song);
     }
@@ -236,10 +261,17 @@ public class MainActivity extends AppCompatActivity implements
                     Log.wtf(TAG, "Got access token");
                     mSongDataFragment.notifySongDataAdapter();
                     break;
+                case ERROR:
+                    SpotifyManager.ACCESS_TOKEN = SpotifyManager.NULL_ACCESS_TOKEN;
+                    Log.wtf(TAG, "ERROR retrieving access token");
+                    break;
+                case EMPTY:
+                    SpotifyManager.ACCESS_TOKEN = SpotifyManager.NULL_ACCESS_TOKEN;
+                    Log.wtf(TAG, "EMPTY access token");
+                    break;
                 default:
                     SpotifyManager.ACCESS_TOKEN = SpotifyManager.NULL_ACCESS_TOKEN;
                     Log.wtf(TAG, "Could not retrieve access token");
-                    // either ERROR or auth flow was cancelled
                     break;
             }
         }

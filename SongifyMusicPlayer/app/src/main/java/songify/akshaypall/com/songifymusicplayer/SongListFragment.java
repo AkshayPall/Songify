@@ -174,13 +174,7 @@ public class SongListFragment extends Fragment {
 
         Log.wtf(TAG, "Make call for cover art images");
 
-        Gson gson = new GsonBuilder().setLenient().create();
-        Retrofit adapter = new Retrofit.Builder()
-                .baseUrl(getResources().getString(R.string.base_url_web_service))
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        SongDataManager.SongDataService service = adapter.create(
-                SongDataManager.SongDataService.class);
+        SongDataManager.SongDataService service = SongDataManager.getService(getActivity());
 
         for (final Song song : mSongs){
             Call<ArrayList<String>> call = service.getCoverArt(

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -25,7 +26,7 @@ import songify.akshaypall.com.songifymusicplayer.Models.Song;
  * {@link MediaPlayerFragment.PlayerFragmentListener} interface
  * to handle interaction events.
  */
-public class MediaPlayerFragment extends Fragment {
+public class MediaPlayerFragment extends Fragment implements View.OnClickListener {
 
     private static final String SEEK_TAG = "SEEKING_MEDIA_PLAYER";
     private PlayerFragmentListener mListener;
@@ -41,6 +42,9 @@ public class MediaPlayerFragment extends Fragment {
     private SeekBar mSeekBar;
     private TextView mTotalSongTime;
     private TextView mCurrSongTime;
+
+    // To show the user the data parse of the current song playing
+    private Button mSongParseInfoButton;
 
     public MediaPlayerFragment() {
         // Required empty public constructor
@@ -87,6 +91,9 @@ public class MediaPlayerFragment extends Fragment {
         mCurrSongTime = (TextView)v.findViewById(R.id.media_player_current_time);
         mTotalSongTime = (TextView)v.findViewById(R.id.media_player_total_time);
 
+        mSongParseInfoButton = (Button)v.findViewById(R.id.media_player_song_parse_button);
+        mSongParseInfoButton.setOnClickListener(this);
+
         return v;
     }
 
@@ -124,7 +131,15 @@ public class MediaPlayerFragment extends Fragment {
             mTotalSongTime.setText(String.format(
                     Locale.CANADA,"%d:%02d", totalMin, totalSeconds-60*totalMin));
         }
+    }
 
+    public void setParseDataButtonGone(){
+        mSongParseInfoButton.setVisibility(View.GONE);
+    }
+
+    public void retrievedSongParseData (String msg) {
+        Log.wtf("YOOO", msg);
+        mSongParseInfoButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -142,6 +157,16 @@ public class MediaPlayerFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.media_player_song_parse_button:
+                break;
+            default:
+                break;
+        }
     }
 
     interface PlayerFragmentListener {

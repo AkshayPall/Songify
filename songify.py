@@ -20,7 +20,7 @@ REQUEST_ACCESS_TOKEN = 'access_token'
 TAG_COVER_ART = "COVER_ART:\t"
 
 # Data request function
-@app.route('/', methods=['GET'])
+@app.route('/song_parse', methods=['GET'])
 def get_songs():
     session = setup_db()
     giv_song = request.args.get(SONG_TITLE_ARG)
@@ -33,8 +33,8 @@ def get_songs():
         SongData.title.ilike(giv_song),
         SongData.artists.ilike(giv_artist))).first()
         if song != None and song.title != None:
-            return make_response(jsonify(song.__rep__(), song.parseData()))
-    return make_response(DATA_NOT_FOUND_MESSAGE)
+            return make_response(jsonify(song.parseData()))
+    return make_response(jsonify(DATA_NOT_FOUND_MESSAGE))
 
 
 # Track Cover Art Request function
