@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -82,6 +83,9 @@ public class MainActivity extends AppCompatActivity implements
         toolbar.setTitle(getString(R.string.actionbar_list_title));
         setSupportActionBar(toolbar);
 
+        // Needed to collapse the app bar always when in the media fragment
+        final AppBarLayout appBarLayout = (AppBarLayout)findViewById(R.id.appbar);
+
         // Set up current song views
         mCurrentSongAlbumImage = (ImageView)findViewById(R.id.player_mini_current_song_album);
         mCurrentSongTitle = (TextView) findViewById(R.id.player_mini_current_song_title);
@@ -135,9 +139,9 @@ public class MainActivity extends AppCompatActivity implements
                     mMiniPlayerFab.animate().y(yDelta);
                 }
 
-                // Show the toolbar always if in the media player view
+                // Expand toolbar in media or hide it in the list. Animate.
                 if (position == 1){
-                    toolbar.findFocus();
+                    appBarLayout.setExpanded(true, true);
                 }
             }
 
