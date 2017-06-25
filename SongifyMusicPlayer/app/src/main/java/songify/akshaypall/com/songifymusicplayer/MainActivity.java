@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements
         mInQueueSongs = new ArrayList<>();
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.actionbar_list_title));
         setSupportActionBar(toolbar);
 
         // Set up current song views
@@ -132,6 +133,11 @@ public class MainActivity extends AppCompatActivity implements
                             getDimensionPixelSize(R.dimen.player_mini_state_fab_margin);
                     float yDelta = displayHeight - mMiniPlayerFab.getHeight() - marginBot;
                     mMiniPlayerFab.animate().y(yDelta);
+                }
+
+                // Show the toolbar always if in the media player view
+                if (position == 1){
+                    toolbar.findFocus();
                 }
             }
 

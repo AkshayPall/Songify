@@ -1,5 +1,6 @@
 package songify.akshaypall.com.songifymusicplayer;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -171,7 +172,7 @@ public class MediaPlayerFragment extends Fragment implements View.OnClickListene
                 Intent i =  new Intent(getActivity(), SongInfoActivity.class);
                 i.putExtra(BlurBackground.KEY_BACKGROUND_BITMAP, blurBackground);
                 i.putExtra(SongInfoActivity.KEY_INFO_STRING, mSongParseData);
-                startActivity(i);
+                startActivity(i, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 break;
             default:
                 break;

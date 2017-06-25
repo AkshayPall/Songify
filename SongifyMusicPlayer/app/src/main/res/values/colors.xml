@@ -3,6 +3,7 @@
     <color name="colorPrimary">#455A64</color>
     <color name="colorPrimaryDark">#263238</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorAccentWhite">#FFFFFF</color>
     <color name="colorSongBackground">#37474F</color>
     <color name="colorPrimaryLight">#546E7A</color>
 </resources>
