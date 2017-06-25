@@ -7,8 +7,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowEnterTransition">@android:transition/fade</item>
-        <item name="android:windowExitTransition">@android:transition/fade</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -35,6 +33,8 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="actionBarStyle">@style/TranslucentActionBar</item>
+        <item name="android:windowEnterTransition">@android:transition/no_transition</item>
+        <item name="android:windowExitTransition">@android:transition/fade</item>
     </style>
 
 </resources>

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import songify.akshaypall.com.songifymusicplayer.Utils.BlurBackground;
@@ -29,5 +31,14 @@ public class SongInfoActivity extends Activity {
         mSongDataTv = (TextView) findViewById(R.id.song_info_tv);
         mData = getIntent().getExtras().getString(KEY_INFO_STRING, "");
         mSongDataTv.setText(mData);
+
+        // The Close icon in the fake toolbar
+        ImageView close = (ImageView)findViewById(R.id.toolbar_close);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishAfterTransition();
+            }
+        });
     }
 }

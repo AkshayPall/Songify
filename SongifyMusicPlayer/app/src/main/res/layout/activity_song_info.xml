@@ -7,16 +7,19 @@
     tools:context="songify.akshaypall.com.songifymusicplayer.SongInfoActivity">
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:id="@+id/toolbar_close"
+        android:padding="@dimen/toolbar_icon_padding"
+        android:layout_width="?android:attr/actionBarSize"
         android:layout_height="?android:attr/actionBarSize"
-        android:src="@android:drawable/ic_delete"
+        android:src="@drawable/close"
         android:tint="@color/colorAccentWhite"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"/>
     <TextView
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_alignParentTop="true"
+        android:gravity="center"
         style="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title"
         android:textColor="@color/colorAccentWhite"
         android:text="@string/app_name"
@@ -30,6 +33,6 @@
         android:padding="@dimen/song_info_padding"
         android:text=""
         android:textColor="@color/colorAccentWhite"
-        style="@style/TextAppearance.AppCompat.Headline"/>
+        style="@style/TextAppearance.AppCompat.Subhead"/>
 
 </RelativeLayout>
