@@ -1,10 +1,7 @@
 package songify.akshaypall.com.songifymusicplayer;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +36,7 @@ class MySongRecyclerViewAdapter extends
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext)
-                .inflate(R.layout.fragment_song, parent, false);
+                .inflate(R.layout.item_song, parent, false);
         return new ViewHolder(view);
     }
 
@@ -61,6 +58,10 @@ class MySongRecyclerViewAdapter extends
                 }
             }
         });
+
+        if (position == mSongs.size() - 1){
+            // TODO: add spacer view
+        }
     }
 
     @Override

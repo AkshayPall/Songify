@@ -16,7 +16,7 @@ public class SongInfoActivity extends Activity {
     private static final String TAG = SongInfoActivity.class.getSimpleName();
     public static final String KEY_INFO_STRING = "KEY_INFO_STRING";
 
-    // Fields to display data in buncle
+    // Fields to display data in tv
     private String mData;
     private TextView mSongDataTv;
 
