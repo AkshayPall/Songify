@@ -12,7 +12,11 @@ There is also an update script to scrape data from the billboard site (update_ch
 
 You may want to create a virtual environment for these scripts to avoid compatibility issues with other Python projects. Python 2.7 can be used. 
 
-In the Android project, you'll need to create a keys XML resource with these 4 values: fbcbcc
+In the Android project, you'll need to create a keys XML resource with these 4 values: 
+1. spotify_client_id
+2. spotify_client_secret
+3. spotify_redirect_uri
+4. base_url_web_service
 
 After adding this file, sync your cradle and then build and run to your device or create an APK for yourself. *This project is for Android API 21+. Let me know if any of you want me to lower the requirement (mostly just using app compat libraries) 
 
