@@ -60,5 +60,7 @@ class SongData(declarative_base()):
       print 'track has been in the charts'
       desc.append('This track has been in the charts for '+
       str(self.weeks)+' weeks now.\n')
+# - append all stats in a summary format
+    desc.append('\nSummary Stats:\n\t' + self.__rep__())
 
     return ''.join(desc)
