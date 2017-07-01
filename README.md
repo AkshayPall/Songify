@@ -3,24 +3,24 @@ Songify is a beautiful music player and service for music afficionados who want 
 
 Data is updated every day and comes from Billboard top 100. Additional data comes from Spotify. 
 
-# How to get it running:
+## How to get it running:
 The backend service is run locally and uses Flask. You can find out how to install flask here: 
 
 There is also an update script to scrape data from the billboard site (update_charts.py). You'll need to set up launchd or create a crontab (or the windows equivalent) in order to automate running this script. I have it set to run every day at a specific time. You can find tutorials for each here: 
-- LaunchD: http://www.launchd.info/
-- Cron: http://www.unixgeeks.org/security/newbie/unix/cron-1.html
+-[LaunchD](http://www.launchd.info/)
+-[Cron](http://www.unixgeeks.org/security/newbie/unix/cron-1.html)
 
 You may want to create a virtual environment for these scripts to avoid compatibility issues with other Python projects. Python 2.7 can be used. 
 
-In the Android project, you'll need to create a keys XML resource with these 4 values: 
+In the Android project, you'll need to create a keys XML resource with these 3 values: 
 1. spotify_client_id
-2. spotify_client_secret
-3. spotify_redirect_uri
-4. base_url_web_service
+2. spotify_redirect_uri
+3. base_url_web_service
 
-After adding this file, sync your cradle and then build and run to your device or create an APK for yourself. *This project is for Android API 21+. Let me know if any of you want me to lower the requirement (mostly just using app compat libraries) 
+After adding this file, sync your cradle and then build and run to your device or create an APK for yourself.
+**This project is for Android API 21+. If any of you want me to lower this requirement (mostly just switching to app compat libraries) then please let me know.** 
 
-# Features to come:
+## Features to come:
 The following are in the works or currently planned:
 - running some analytics (ML to determine new trends)
 - cover photos coming from Spotify
