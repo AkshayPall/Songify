@@ -11,7 +11,7 @@
         android:padding="@dimen/toolbar_icon_padding"
         android:layout_width="?android:attr/actionBarSize"
         android:layout_height="?android:attr/actionBarSize"
-        android:src="@drawable/close"
+        android:src="@drawable/ic_close"
         android:tint="@color/colorAccentWhite"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"/>

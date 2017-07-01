@@ -21,13 +21,14 @@
             android:layout_height="@dimen/song_album_image_size"
             android:src="@color/colorAccent" />
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="8dp">
             <TextView
                 android:id="@+id/song_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
                 android:text="@string/song_title_default"
@@ -39,17 +40,13 @@
                 android:id="@+id/song_artists"
                 android:text="@string/song_artists_default"
                 android:textColor="@android:color/white"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textSize="@dimen/player_mini_artists_textsize"
                 android:textAppearance="?attr/textAppearanceListItem" />
         </LinearLayout>
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
