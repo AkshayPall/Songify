@@ -6,7 +6,9 @@ Data is updated every day and comes from Billboard top 100. Additional data come
 # How to get it running:
 The backend service is run locally and uses Flask. You can find out how to install flask here: 
 
-There is also an update script to scrape data from the billboard site (update_charts.py). You'll need to set up launchd Mac OSX (27626) or newer) or create a crontab on Linux or older versions of Mac in order to run this script every day. You can find tutorials for each here: jebsb jdbshs
+There is also an update script to scrape data from the billboard site (update_charts.py). You'll need to set up launchd or create a crontab (or the windows equivalent) in order to automate running this script. I have it set to run every day at a specific time. You can find tutorials for each here: 
+- LaunchD: http://www.launchd.info/
+- Cron: http://www.unixgeeks.org/security/newbie/unix/cron-1.html
 
 You may want to create a virtual environment for these scripts to avoid compatibility issues with other Python projects. Python 2.7 can be used. 
 
