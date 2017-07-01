@@ -6,13 +6,13 @@ Data is updated every day and comes from Billboard top 100. Additional data come
 ## How to get it running:
 The backend service is run locally and uses Flask. You can find out how to install Flask [here](http://flask.pocoo.org/). 
 
-There is also an update script to scrape data from the billboard site (**update_charts.py**). You'll need to set up launchd or create a crontab (or the windows equivalent) in order to automate running this script. I have it set to run every day at a specific time. You can find tutorials for each here: 
+There is also an update script to scrape data from the billboard site (**update_charts.py**). You'll need to set up launchd or create a crontab (or the windows equivalent) in order to automate running this script. I have it set to run every day at a specific time. You can find tutorials for each below: 
 - [LaunchD](http://www.launchd.info/)
 - [Cron](http://www.unixgeeks.org/security/newbie/unix/cron-1.html)
 
-You may want to create a virtual environment for these scripts to avoid compatibility issues with other Python projects. Python 2.7 can be used. 
+You may want to create a virtual environment for these scripts to avoid compatibility issues with other Python projects. Python 2.7 can be used. More info found [here.](http://python-guide-pt-br.readthedocs.io/en/latest/dev/virtualenvs/) 
 
-In the Android project, you'll need to create a keys XML resource with these 3 values: 
+In the Android project, you'll need to create a keys XML resource with these 3 string values: 
 1. spotify_client_id
 2. spotify_redirect_uri
 3. base_url_web_service
