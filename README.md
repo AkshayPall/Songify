@@ -4,9 +4,9 @@ Songify is a beautiful music player and service for music afficionados who want 
 Data is updated every day and comes from Billboard top 100. Additional data comes from Spotify. 
 
 ## How to get it running:
-The backend service is run locally and uses Flask. You can find out how to install flask here: 
+The backend service is run locally and uses Flask. You can find out how to install Flask [here](http://flask.pocoo.org/). 
 
-There is also an update script to scrape data from the billboard site (update_charts.py). You'll need to set up launchd or create a crontab (or the windows equivalent) in order to automate running this script. I have it set to run every day at a specific time. You can find tutorials for each here: 
+There is also an update script to scrape data from the billboard site (**update_charts.py**). You'll need to set up launchd or create a crontab (or the windows equivalent) in order to automate running this script. I have it set to run every day at a specific time. You can find tutorials for each here: 
 - [LaunchD](http://www.launchd.info/)
 - [Cron](http://www.unixgeeks.org/security/newbie/unix/cron-1.html)
 
