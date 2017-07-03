@@ -158,8 +158,10 @@ public class MainActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 if (mPlaybackService.isPlaying()){
                     mMiniPlayerFab.setImageDrawable(getDrawable(android.R.drawable.ic_media_play));
+                    mMediaPlayer.stopRotation();
                 } else {
                     mMiniPlayerFab.setImageDrawable(getDrawable(android.R.drawable.ic_media_pause));
+                    mMediaPlayer.startRotation();
                 }
                 mPlaybackService.changeStateSong();
             }
@@ -229,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements
             mPlaybackService.setSong(song);
             mPlaybackService.playSong();
             mMediaPlayer.updateSongData(song);
+            mMediaPlayer.startRotation();
             mMediaPlayer.setParseDataButtonGone();
             SongDataManager.SongDataService service = SongDataManager.getService(this);
             Call<String> call = service.getSongParseData(song.getTitle(), song.getArtists());

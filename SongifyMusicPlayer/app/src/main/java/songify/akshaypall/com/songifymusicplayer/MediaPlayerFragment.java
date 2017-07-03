@@ -53,6 +53,10 @@ public class MediaPlayerFragment extends Fragment implements View.OnClickListene
     private Button mSongParseInfoButton;
     private String mSongParseData;
 
+    // Pretty animation for the album artwork
+    private ImageView mAlbumImageView;
+    private RotateAnimation mRotateAnimation;
+
     public MediaPlayerFragment() {
         // Required empty public constructor
     }
@@ -66,11 +70,11 @@ public class MediaPlayerFragment extends Fragment implements View.OnClickListene
 
 
         // Resize the album image to have a 1:1 ratio
-        ImageView albumImageView = (ImageView)v.findViewById(R.id.media_player_album_image);
-        albumImageView.setMaxHeight(albumImageView.getWidth());
+        mAlbumImageView = (ImageView)v.findViewById(R.id.media_player_album_image);
+        mAlbumImageView.setMaxHeight(mAlbumImageView.getWidth());
 
-        // Set constant rotating animation, to look like a record player.
-        RotateAnimation rotateAnimation = new RotateAnimation(
+        // Setup constant rotating animation, to look like a record player when playing a track.
+        mRotateAnimation = new RotateAnimation(
                 0,
                 360f,
                 Animation.RELATIVE_TO_SELF,
@@ -78,10 +82,9 @@ public class MediaPlayerFragment extends Fragment implements View.OnClickListene
                 Animation.RELATIVE_TO_SELF,
                 0.5f
         );
-        rotateAnimation.setInterpolator(new LinearInterpolator());
-        rotateAnimation.setRepeatCount(Animation.INFINITE);
-        rotateAnimation.setDuration(10000);
-        albumImageView.startAnimation(rotateAnimation);
+        mRotateAnimation.setInterpolator(new LinearInterpolator());
+        mRotateAnimation.setRepeatCount(Animation.INFINITE);
+        mRotateAnimation.setDuration(10000);
 
         // Initialize views for the current song
         mSongTitle = (TextView)v.findViewById(R.id.media_player_song_title);
@@ -96,6 +99,7 @@ public class MediaPlayerFragment extends Fragment implements View.OnClickListene
                 // Only consider the scrub when it is from the user
                 if (fromUser){
                     mListener.updateSeekPos(progress);
+                    startRotation();
                 }
             }
 
@@ -195,6 +199,26 @@ public class MediaPlayerFragment extends Fragment implements View.OnClickListene
                 break;
         }
     }
+
+    /**
+     * To stop the rotation animation of the album artwork CircleImageView
+     */
+    public void stopRotation() {
+        if (mAlbumImageView.getAnimation() != null && !mAlbumImageView.getAnimation().hasEnded()){
+            mAlbumImageView.getAnimation().cancel();
+        }
+    }
+
+    /**
+     * To start the rotation animation of the album artwork CircleImageView
+     */
+    public void startRotation() {
+        if (mAlbumImageView.getAnimation() == null){
+            mAlbumImageView.startAnimation(mRotateAnimation);
+        }
+    }
+
+
 
     interface PlayerFragmentListener {
         void startingSeekPauseSong();
