@@ -213,7 +213,7 @@ public class MediaPlayerFragment extends Fragment implements View.OnClickListene
      * To start the rotation animation of the album artwork CircleImageView
      */
     public void startRotation() {
-        if (mAlbumImageView.getAnimation() == null){
+        if (mAlbumImageView.getAnimation() == null || mAlbumImageView.getAnimation().hasEnded()){
             mAlbumImageView.startAnimation(mRotateAnimation);
         }
     }
