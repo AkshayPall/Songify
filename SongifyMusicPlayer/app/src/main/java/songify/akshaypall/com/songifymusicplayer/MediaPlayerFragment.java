@@ -10,6 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -65,6 +68,20 @@ public class MediaPlayerFragment extends Fragment implements View.OnClickListene
         // Resize the album image to have a 1:1 ratio
         ImageView albumImageView = (ImageView)v.findViewById(R.id.media_player_album_image);
         albumImageView.setMaxHeight(albumImageView.getWidth());
+
+        // Set constant rotating animation, to look like a record player.
+        RotateAnimation rotateAnimation = new RotateAnimation(
+                0,
+                360f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f
+        );
+        rotateAnimation.setInterpolator(new LinearInterpolator());
+        rotateAnimation.setRepeatCount(Animation.INFINITE);
+        rotateAnimation.setDuration(10000);
+        albumImageView.startAnimation(rotateAnimation);
 
         // Initialize views for the current song
         mSongTitle = (TextView)v.findViewById(R.id.media_player_song_title);

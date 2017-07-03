@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingLeft="@dimen/media_player_overall_padding"
     android:paddingRight="@dimen/media_player_overall_padding"
@@ -9,11 +10,13 @@
     android:background="@color/colorSongBackground"
     tools:context="songify.akshaypall.com.songifymusicplayer.MediaPlayerFragment">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/media_player_album_image"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="@color/colorPrimaryLight"
+        android:src="@drawable/current_song_album_placeholder"
+        app:civ_border_width="0.5dp"
+        app:civ_border_color="@color/colorAccentWhite"
         android:layout_gravity="center"/>
 
     <TextView
