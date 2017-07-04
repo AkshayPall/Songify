@@ -3,6 +3,8 @@ Songify is a beautiful music player and service for music aficionados who want t
 
 Data is updated every day and comes from Billboard top 100. Additional data comes from Spotify
 
+<img src="https://github.com/AkshayPall/Songify/blob/master/demos/songify_july_4_17_open_and_play.gif" width="48">
+
 <div style="width:30%">![image1](https://github.com/AkshayPall/Songify/blob/master/demos/songify_july_4_17_open_and_play.gif)</div>
 <div style="width:30%">![image2](https://github.com/AkshayPall/Songify/blob/master/demos/songify_july_4_17_playback_animation.gif)</div>
 
