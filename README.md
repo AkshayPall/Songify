@@ -3,7 +3,7 @@ Songify is a beautiful music player and service for music aficionados who want t
 
 Data is updated every day and comes from Billboard top 100. Additional data comes from Spotify
 
-[image1](https://github.com/AkshayPall/Songify/blob/master/demos/songify_july_4_17_open_and_play.gif) [image2](https://github.com/AkshayPall/Songify/blob/master/demos/songify_july_4_17_playback_animation.gif)
+![image1](https://github.com/AkshayPall/Songify/blob/master/demos/songify_july_4_17_open_and_play.gif) ![image2](https://github.com/AkshayPall/Songify/blob/master/demos/songify_july_4_17_playback_animation.gif)
 
 ## How to get it running:
 The backend service is run locally and uses Flask. You can find out how to install Flask [here](http://flask.pocoo.org/).
