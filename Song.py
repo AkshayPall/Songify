@@ -24,8 +24,17 @@ class SongData(declarative_base()):
             self.rank_current, self.rank_last, self.weeks, self.movement,
             self.spotifyID, self.spotifyUrl, self.videoUrl)
 
+  def summary_stats(self):
+      stats = """Positions:\nPeak: '%s'\nCurrent: '%s'\nPrevious: '%s'
+                \nLast recorded change to Position: '%s'""" % (self.rank_peak,
+                self.rank_current, self.rank_last, self.movement)
+      if self.videoUrl != '':
+          stats.append("\n\nLink to Music Video: '%s'" % (self.videoUrl))
+      print stats
+      return stats
+
 # Parse song data to return interesting information
-  def parseData(self):
+  def parse_data(self):
     print '', self.__rep__()
     print self.title, self.movement
     LARGE_DELTA_MOVEMENT = 5
@@ -61,6 +70,6 @@ class SongData(declarative_base()):
       desc.append('This track has been in the charts for '+
       str(self.weeks)+' weeks now.\n')
 # - append all stats in a summary format
-    desc.append('\nSummary Stats:\n\t' + self.__rep__())
+    desc.append('\nSummary Stats:\n' + self.summary_stats())
 
     return ''.join(desc)

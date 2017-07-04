@@ -33,7 +33,7 @@ def get_songs():
         SongData.title.ilike(giv_song),
         SongData.artists.ilike(giv_artist))).first()
         if song != None and song.title != None:
-            return make_response(jsonify(song.parseData()))
+            return make_response(jsonify(song.parse_data()))
     return make_response(jsonify(DATA_NOT_FOUND_MESSAGE))
 
 
